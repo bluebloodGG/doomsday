@@ -1,0 +1,233 @@
+{
+    "frames": [{
+        "filename": "zombie_attack_0001",
+        "frame": {
+            "x": 0,
+            "y": 65,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_attack_0002",
+        "frame": {
+            "x": 65,
+            "y": 130,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_move_0001",
+        "frame": {
+            "x": 65,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_move_0002",
+        "frame": {
+            "x": 65,
+            "y": 65,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_move_0003",
+        "frame": {
+            "x": 0,
+            "y": 130,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_move_0004",
+        "frame": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_spawn_0001",
+        "frame": {
+            "x": 130,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_spawn_0002",
+        "frame": {
+            "x": 130,
+            "y": 65,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_guts_0001",
+        "frame": {
+            "x": 130,
+            "y": 130,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_guts_0002",
+        "frame": {
+            "x": 0,
+            "y": 195,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }, {
+        "filename": "zombie_guts_0003",
+        "frame": {
+            "x": 65,
+            "y": 195,
+            "w": 64,
+            "h": 64
+        },
+        "rotated": false,
+        "trimmed": false,
+        "spriteSourceSize": {
+            "x": 0,
+            "y": 0,
+            "w": 64,
+            "h": 64
+        },
+        "sourceSize": {
+            "w": 64,
+            "h": 64
+        }
+    }],
+    "meta": {
+        "app": "https://www.leshylabs.com/apps/sstool/",
+        "version": "Leshy SpriteSheet Tool v0.8.4",
+        "image": "zombie.png",
+        "size": {
+            "w": 194,
+            "h": 259
+        },
+        "scale": 1
+    }
+}
