@@ -1,19 +1,19 @@
 {
-  "name": "doomsday",
-  "version": "1.0.0",
-  "description": "Top down 2D shooter",
-  "main": "game.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "blueblood",
-  "license": "WTFPL",
-  "dependencies": {
-    "phaser": "^2.4.8"
-  },
-  "devDependencies": {
-    "browserify": "^13.0.1",
-    "browserify-shim": "^3.8.12",
-    "typescript": "^1.8.10"
-  }
+	"name": "doomsday",
+	"version": "1.0.0",
+	"description": "Top down 2D shooter",
+	"main": "game.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "blueblood",
+	"license": "WTFPL",
+	"dependencies": {
+		"phaser": "^2.4.8"
+	},
+	"devDependencies": {
+		"browserify": "^13.0.1",
+		"browserify-shim": "^3.8.12",
+		"typescript": "^1.8.10"
+	}
 }

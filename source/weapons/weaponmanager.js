@@ -1,8 +1,8 @@
 /* global Phaser */
 var WeaponManager = (function() {
-    function WeaponManager(game, player) {
+	function WeaponManager(game, player) {
 
-    }
+	}
 
-    return WeaponManager;
+	return WeaponManager;
 }());
