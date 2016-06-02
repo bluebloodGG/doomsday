@@ -1,4 +1,4 @@
-/// <reference path="../node_modules/phaser/typescript/phaser.d.ts" />
+/* global Phaser */
 
 var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', {
 	preload: preload,
@@ -24,9 +24,9 @@ function preload() {
 	game.load.atlas('blood', 'assets/blood.png', 'assets/blood.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 
 	game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-	//this.scale.pageAlignHorizontally = true;
-	// game.scale.pageAlignVertically = true;
-	// game.scale.setScreenSize( true );
+
+	var screenShake = game.plugins.add(Phaser.Plugin.ScreenShake);
+    game.plugins.screenShake = screenShake;
 }
 
 var map;
@@ -57,7 +57,7 @@ function create() {
 
 	player = new Player(game);
 
-	for(var i = 0; i < 100; i++) {
+	for (var i = 0; i < 100; i++) {
 		zombies.push(new Enemy(game, player));
 	}
 	game.add.text(17, 17, '1: Pistol, 2: Submachinegun', {});
@@ -66,13 +66,13 @@ function create() {
 function update() {
 	player.update();
 
-	for(var i in zombies) {
+	for (var i in zombies) {
 		var z = zombies[i];
 		var zs = zombies[i].sprite;
-		if(zs.alive) {
+		if (zs.alive) {
 			this.game.physics.arcade.collide(player.sprite, zs);
 			var hit = this.game.physics.arcade.overlap(player.weapon.bullets, zs, bulletHitEnemy, null, this);
-			if(hit) {
+			if (hit) {
 				z.onHit();
 			}
 			z.update();
@@ -83,4 +83,5 @@ function update() {
 function bulletHitEnemy(zombie, bullet) {
 	zombie.alive = false;
 	bullet.kill();
+	game.plugins.screenShake.start(20);
 }
