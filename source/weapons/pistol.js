@@ -7,6 +7,15 @@ var Pistol = (function() {
 		this.sprite = new Phaser.Sprite(this.game, 2, -28, 'weapons', '1h_pistol.png');
 		this.sprite.anchor.setTo(0.5, 0.5);
 
+		this.gunflash = new Phaser.Sprite(this.game, 0, -14, 'gunflash', 'flash_b_0001');
+		this.gunflash.anchor.setTo(0.5, 0.5);
+		this.gunflash.scale.setTo(0.1, 0.1);
+		this.gunflash.visible = false;
+		this.sprite.addChild(this.gunflash);
+		this.anim = {
+			gunflash: this.gunflash.animations.add('gunflash', Phaser.Animation.generateFrameNames('flash_b_000', 1, 6))
+		}
+
 		this.bullets = game.add.group();
 		this.bullets.enableBody = true;
 		this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -34,7 +43,12 @@ var Pistol = (function() {
 			this.game.physics.arcade.velocityFromAngle(this.sprite.parent.angle-90, 1000, bullet.body.velocity);
 			bullet.angle = this.sprite.parent.angle-90;
 
-
+			var gf = this.gunflash;
+			gf.visible = true;
+			if(!this.anim.gunflash.isPlaying)
+				this.anim.gunflash.play(48, false).onComplete.add(function() {
+					gf.visible = false;
+				});
 			return true;
 		}
 

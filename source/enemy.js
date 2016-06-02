@@ -70,9 +70,18 @@ var Enemy = (function() {
 		blood.scale.setTo(0.25, 0.25);
 		blood.rotation = this.sprite.rotation;
 		this.sprite.bringToTop();
-		blood.animations.add('blood1', Phaser.Animation.generateFrameNames('blood_a_000', 1, 6)).play(24, false);
+		blood.animations.add('blood1', Phaser.Animation.generateFrameNames('blood_a_000', 1, 6)).play(24, false).onComplete.add(function() {
+			this.game.time.events.add(Phaser.Timer.SECOND * 4, function() {
+				blood.destroy();
+			}, this);
+		});
 		//this.sprite.animations.add('blood2', Phaser.Animation.generateFrameNames('blood_b_000', 1, 6))
 		//this.anim.blood1.play(6, false);
+
+		this.game.time.events.add(Phaser.Timer.SECOND * 4, function() {
+			this.sprite.destroy();
+			console.log("hej");
+		}, this);
 
 	};
 

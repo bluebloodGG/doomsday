@@ -22,6 +22,7 @@ function preload() {
 	game.load.atlas('zombie', 'assets/zombie.png', 'assets/zombie.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 	game.load.atlas('weapons', 'assets/weapons.png', 'assets/weapons.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 	game.load.atlas('blood', 'assets/blood.png', 'assets/blood.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+	game.load.atlas('gunflash', 'assets/gunflash.png', 'assets/gunflash.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 
 	game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
