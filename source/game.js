@@ -21,6 +21,7 @@ function preload() {
 	game.load.atlas('soldier', 'assets/soldier.png', 'assets/soldier.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 	game.load.atlas('zombie', 'assets/zombie.png', 'assets/zombie.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 	game.load.atlas('weapons', 'assets/weapons.png', 'assets/weapons.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+	game.load.atlas('blood', 'assets/blood.png', 'assets/blood.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 
 	game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 	//this.scale.pageAlignHorizontally = true;
@@ -70,7 +71,10 @@ function update() {
 		var zs = zombies[i].sprite;
 		if(zs.alive) {
 			this.game.physics.arcade.collide(player.sprite, zs);
-			this.game.physics.arcade.overlap(player.weapon.bullets, zs, bulletHitEnemy, null, this);
+			var hit = this.game.physics.arcade.overlap(player.weapon.bullets, zs, bulletHitEnemy, null, this);
+			if(hit) {
+				z.onHit();
+			}
 			z.update();
 		}
 	}
@@ -78,6 +82,5 @@ function update() {
 
 function bulletHitEnemy(zombie, bullet) {
 	zombie.alive = false;
-	bullet.kill()
-	console.log("HIT");
+	bullet.kill();
 }
