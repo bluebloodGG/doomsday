@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Top down 2D shooter",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
