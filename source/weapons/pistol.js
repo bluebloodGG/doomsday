@@ -29,6 +29,7 @@ var Pistol = (function() {
 		this.fireRate = 50;
 		this.nextFire = 0;
 		this.isShooting = false;
+		this.damage = 3;
 	}
 
 	Pistol.prototype.fire = function() {
@@ -45,10 +46,12 @@ var Pistol = (function() {
 
 			var gf = this.gunflash;
 			gf.visible = true;
-			if(!this.anim.gunflash.isPlaying)
+			if(!this.anim.gunflash.isPlaying) {
 				this.anim.gunflash.play(48, false).onComplete.add(function() {
 					gf.visible = false;
 				});
+			}
+
 			return true;
 		}
 

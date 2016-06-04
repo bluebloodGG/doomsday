@@ -20,6 +20,7 @@ var Submachinegun = (function() {
 		this.fireRate = 50;
 		this.nextFire = 0;
 		this.isShooting = false;
+		this.damage = 1.5;
 	}
 
 	Submachinegun.prototype.fire = function() {
@@ -31,8 +32,15 @@ var Submachinegun = (function() {
 
 			var bullet = this.bullets.getFirstExists(false);
 			bullet.reset(bulletWorldPosition.x, bulletWorldPosition.y);
-			this.game.physics.arcade.velocityFromAngle(this.sprite.parent.angle-90, 1000, bullet.body.velocity);
-			bullet.angle = this.sprite.parent.angle-90;
+
+			var spread = 3.0;
+			var angle = this.sprite.parent.angle-90 + (spread * (this.game.rnd.integerInRange(-4, 4)));
+
+			this.game.physics.arcade.velocityFromAngle(angle, 2000, bullet.body.velocity);
+
+
+			bullet.angle = angle;
+			//bullet.angle = this.sprite.parent.angle-90;
 
 
 			return true;

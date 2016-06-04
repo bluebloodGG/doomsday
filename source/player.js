@@ -52,31 +52,33 @@ var Player = (function() {
 	};
 
 	Player.prototype._handleInput = function() {
-		var speed = 5;
+		var speed = 350;
 		var moving = false;
 		this.soldier.torso.rotation = this.game.physics.arcade.angleToPointer(this.soldier.torso) + (Math.PI / 2);
 		this.soldier.legs.rotation = this.soldier.torso.rotation;
 
 		if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
-			this.soldier.torso.y -= speed;
+			this.soldier.torso.body.velocity.y = -speed;
 			this.soldier.legs.rotation = Phaser.Math.degToRad(180);
 			moving = true;
-		}
-
-		if(this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
-			this.soldier.torso.y += speed;
+		} else if(this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+			this.soldier.torso.body.velocity.y = speed;
 			this.soldier.legs.rotation = Phaser.Math.degToRad(0);
 			moving = true;
+		}  else {
+		    this.soldier.torso.body.velocity.y = 0;
 		}
 
 		if(this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-			this.soldier.torso.x -= speed;
+			this.soldier.torso.body.velocity.x = -speed;
 			this.soldier.legs.rotation = Phaser.Math.degToRad(270);
 			moving = true;
 		} else if(this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
-			this.soldier.torso.x += speed;
+			this.soldier.torso.body.velocity.x = speed;
 			this.soldier.legs.rotation = Phaser.Math.degToRad(90);
 			moving = true;
+		} else {
+		    this.soldier.torso.body.velocity.x = 0;
 		}
 
 		if(this.game.input.activePointer.isDown) {

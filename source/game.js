@@ -3,12 +3,13 @@
 var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', {
 	preload: preload,
 	create: create,
-	update: update
+	update: update,
+	render: render
 });
 
 function preload() {
-	game.load.tilemap('mario', 'assets/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
-	game.load.image('tiles', 'assets/maps/tilemap.png');
+	game.load.tilemap('level1', 'assets/maps/doomsday-level1.json', null, Phaser.Tilemap.TILED_JSON);
+	game.load.image('tiles', 'assets/maps/dungeon.png');
 
 	game.load.image('soldier-torso', 'assets/soldier/soldier_torso_DW.png');
 	game.load.spritesheet('soldier-legs', 'assets/soldier/soldier-legs.png', 64, 64, 4);
@@ -43,22 +44,24 @@ function create() {
 
 
 	//  The 'mario' key here is the Loader key given in game.load.tilemap
-	map = game.add.tilemap('mario');
+	map = game.add.tilemap('level1');
 
 	//  The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
 	//  The second parameter maps this name to the Phaser.Cache key 'tiles'
-	map.addTilesetImage('floor', 'tiles');
+	map.addTilesetImage('dungeon', 'tiles');
 
+
+	map.setCollision([1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 16, 17, 18]);
 	//  Creates a layer from the World1 layer in the map data.
 	//  A Layer is effectively like a Phaser.Sprite, so is added to the display list.
-	layer = map.createLayer('Floor');
+	layer = map.createLayer('Dungeon');
 
 	//  This resizes the game world to match the layer dimensions
 	layer.resizeWorld();
 
 	player = new Player(game);
 
-	for (var i = 0; i < 100; i++) {
+	for (var i = 0; i < 0; i++) {
 		zombies.push(new Enemy(game, player));
 	}
 	game.add.text(17, 17, '1: Pistol, 2: Submachinegun', {});
@@ -74,15 +77,20 @@ function update() {
 			this.game.physics.arcade.collide(player.sprite, zs);
 			var hit = this.game.physics.arcade.overlap(player.weapon.bullets, zs, bulletHitEnemy, null, this);
 			if (hit) {
-				z.onHit();
+				z.onHit(player.weapon.damage);
 			}
 			z.update();
 		}
 	}
+
+	game.physics.arcade.collide(player.soldier.torso, layer);
+}
+
+function render() {
+	game.debug.bodyInfo(player.soldier.torso, 32, 32);
 }
 
 function bulletHitEnemy(zombie, bullet) {
-	zombie.alive = false;
-	bullet.kill();
 	game.plugins.screenShake.start(20);
+	bullet.kill();
 }
