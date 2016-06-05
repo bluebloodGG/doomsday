@@ -62,6 +62,7 @@ Doomsday.Main.prototype.update = function() {
 };
 
 Doomsday.Main.prototype.render = function() {
+	this.monsterManager.render();
 	var left = 8;
 	var top = 16;
 	this.game.debug.text("FPS: " + this.game.time.fps, left, top);

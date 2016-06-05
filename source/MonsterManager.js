@@ -16,6 +16,7 @@ Doomsday.MonsterManager = (function() {
 				var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
 				monster.rotation = rotation -  (Math.PI / 2);
 				monster.animations.play('move');
+				monster.healthbar.update();
 			}
 		}, this);
 
@@ -24,6 +25,12 @@ Doomsday.MonsterManager = (function() {
 			this.generateMonster();
 		}, this);
 	};
+
+	MonsterManager.prototype.render = function() {
+		this.monsters.forEachAlive(function(monster) {
+			monster.healthbar.render();
+		}, this);
+	}
 
 	MonsterManager.prototype.setStats = function(monster, name, health, speed, strength, corpseFrames) {
 		monster.animations.play('spawn').onComplete.add(function() {
@@ -36,10 +43,12 @@ Doomsday.MonsterManager = (function() {
 
 		monster.name = name;
 		monster.health = health;
+		monster.maxHealth = health;
 		monster.speed = speed;
 		monster.strength = strength;
 		monster.spawning = true;
 		monster.corpseFrames = corpseFrames;
+		monster.healthbar = new Doomsday.Healthbar(this.game, monster);
 
 		return monster;
 	};
@@ -88,7 +97,7 @@ Doomsday.MonsterManager = (function() {
 		monster.animations.add('attack', Phaser.Animation.generateFrameNames('fatso/attack/fatso_attack_000', 1, 2, '.png'), 2);
 		monster.animations.add('spawn', Phaser.Animation.generateFrameNames('fatso/spawn/fatso_spawn_000', 1, 2, '.png'), 2);
 
-		return this.setStats(monster, 'fatso', 25, 200, 10, Phaser.Animation.generateFrameNames('fatso/guts/fatso_guts_000', 1, 3, '.png'));
+		return this.setStats(monster, 'fatso', 250, 50, 10, Phaser.Animation.generateFrameNames('fatso/guts/fatso_guts_000', 1, 3, '.png'));
 	};
 
 	MonsterManager.prototype.generateMoose = function(monster) {
@@ -97,7 +106,7 @@ Doomsday.MonsterManager = (function() {
 		monster.animations.add('attack', Phaser.Animation.generateFrameNames('moose/attack/moose_attack_000', 1, 2, '.png'), 2);
 		monster.animations.add('spawn', Phaser.Animation.generateFrameNames('moose/spawn/moose_spawn_000', 1, 2, '.png'), 2);
 
-		return this.setStats(monster, 'moose', 25, 200, 10, Phaser.Animation.generateFrameNames('moose/guts/moose_guts_000', 1, 3, '.png'));
+		return this.setStats(monster, 'moose', 75, 150, 10, Phaser.Animation.generateFrameNames('moose/guts/moose_guts_000', 1, 3, '.png'));
 	};
 
 	MonsterManager.prototype.generateRott = function(monster) {
@@ -106,7 +115,7 @@ Doomsday.MonsterManager = (function() {
 		monster.animations.add('attack', Phaser.Animation.generateFrameNames('rott/attack/rott_attack_000', 1, 2, '.png'), 2);
 		monster.animations.add('spawn', Phaser.Animation.generateFrameNames('rott/spawn/rott_spawn_000', 1, 2, '.png'), 2);
 
-		return this.setStats(monster, 'rott', 25, 200, 10, Phaser.Animation.generateFrameNames('rott/guts/rott_guts_000', 1, 3, '.png'));
+		return this.setStats(monster, 'rott', 100, 100, 10, Phaser.Animation.generateFrameNames('rott/guts/rott_guts_000', 1, 3, '.png'));
 	};
 
 	MonsterManager.prototype.generateVomit = function(monster) {
@@ -115,7 +124,7 @@ Doomsday.MonsterManager = (function() {
 		monster.animations.add('attack', Phaser.Animation.generateFrameNames('vomit/attack/vomit_attack_000', 1, 2, '.png'), 2);
 		monster.animations.add('spawn', Phaser.Animation.generateFrameNames('vomit/spawn/vomit_spawn_000', 1, 2, '.png'), 2);
 
-		return this.setStats(monster, 'vomit', 25, 200, 10, Phaser.Animation.generateFrameNames('vomit/guts/vomit_guts_000', 1, 3, '.png'));
+		return this.setStats(monster, 'vomit', 150, 125, 10, Phaser.Animation.generateFrameNames('vomit/guts/vomit_guts_000', 1, 3, '.png'));
 	};
 
 	MonsterManager.prototype.generateZombie = function(monster) {
@@ -124,7 +133,7 @@ Doomsday.MonsterManager = (function() {
 		monster.animations.add('attack', Phaser.Animation.generateFrameNames('zombie/attack/zombie_attack_000', 1, 2, '.png'), 2);
 		monster.animations.add('spawn', Phaser.Animation.generateFrameNames('zombie/spawn/zombie_spawn_000', 1, 2, '.png'), 2);
 
-		return this.setStats(monster, 'zombie', 50, 200, 10, Phaser.Animation.generateFrameNames('zombie/guts/zombie_guts_000', 1, 3, '.png'));
+		return this.setStats(monster, 'zombie', 100, 100, 10, Phaser.Animation.generateFrameNames('zombie/guts/zombie_guts_000', 1, 3, '.png'));
 	};
 
 	MonsterManager.prototype.handleDeath = function(target) {
@@ -145,6 +154,7 @@ Doomsday.MonsterManager = (function() {
 		corpse.lifespan = 3000;
 
 		target.destroy();
+		delete target.healthbar;
 	};
 
 	return MonsterManager;
