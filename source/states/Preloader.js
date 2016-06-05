@@ -9,7 +9,7 @@ Doomsday.Preloader.prototype = {
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         //this.game.physics.startSystem(Phaser.Physics.P2JS);
-    
+
         this.game.input.keyboard.addKeyCapture([
             Phaser.Keyboard.LEFT,
             Phaser.Keyboard.RIGHT,
@@ -17,7 +17,7 @@ Doomsday.Preloader.prototype = {
             Phaser.Keyboard.DOWN,
             Phaser.Keyboard.SPACEBAR
         ]);
-        
+
         this.game.load.tilemap('level1', 'assets/maps/doomsday-level1.json', null, Phaser.Tilemap.TILED_JSON);
 		this.game.load.image('tiles', 'assets/maps/dungeon.png');
 
@@ -30,16 +30,16 @@ Doomsday.Preloader.prototype = {
 		this.game.load.image('bullet', 'assets/projectile2.png');
 
 		this.game.load.atlas('soldier', 'assets/soldier.png', 'assets/soldier.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
-		this.game.load.atlas('zombie', 'assets/zombie.png', 'assets/zombie.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
+		this.game.load.atlas('zombiearmy', 'assets/zombiearmy.png', 'assets/zombiearmy.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 		this.game.load.atlas('weapons', 'assets/weapons.png', 'assets/weapons.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 		this.game.load.atlas('blood', 'assets/blood.png', 'assets/blood.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 		this.game.load.atlas('gunflash', 'assets/gunflash.png', 'assets/gunflash.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
-        
+
         this.game.load.image('bullet', 'assets/bullet.png');
-		
+
 		var screenShake = this.game.plugins.add(Phaser.Plugin.ScreenShake);
-		this.game.plugins.screenShake = screenShake;      
-        
+		this.game.plugins.screenShake = screenShake;
+
     },
 
     create: function() {

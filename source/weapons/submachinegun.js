@@ -7,6 +7,12 @@ var Submachinegun = (function() {
 		this.sprite = new Phaser.Sprite(this.game, 2, -28, 'weapons', '1h_smg.png');
 		this.sprite.anchor.setTo(0.5, 0.5);
 
+		this.currentRateOfFire = 25;
+		this.fireRate = 50;
+		this.nextFire = 0;
+		this.isShooting = false;
+		this.strength = 15;
+
 		this.bullets = game.add.group();
 		this.bullets.enableBody = true;
 		this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -15,12 +21,7 @@ var Submachinegun = (function() {
 		this.bullets.setAll('anchor.y', 0.5);
 		this.bullets.setAll('outOfBoundsKill', true);
 		this.bullets.setAll('checkWorldBounds', true);
-
-		this.currentRateOfFire = 25;
-		this.fireRate = 50;
-		this.nextFire = 0;
-		this.isShooting = false;
-		this.damage = 1.5;
+		this.bullets.setAll('strength', this.strength, false, false, 0, true);
 	}
 
 	Submachinegun.prototype.fire = function() {

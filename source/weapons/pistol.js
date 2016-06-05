@@ -16,6 +16,12 @@ var Pistol = (function() {
 			gunflash: this.gunflash.animations.add('gunflash', Phaser.Animation.generateFrameNames('flash_b_000', 1, 6))
 		}
 
+		this.currentRateOfFire = 5;
+		this.fireRate = 50;
+		this.nextFire = 0;
+		this.isShooting = false;
+		this.strength = 30;
+
 		this.bullets = game.add.group();
 		this.bullets.enableBody = true;
 		this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -24,12 +30,7 @@ var Pistol = (function() {
 		this.bullets.setAll('anchor.y', 0.5);
 		this.bullets.setAll('outOfBoundsKill', true);
 		this.bullets.setAll('checkWorldBounds', true);
-
-		this.currentRateOfFire = 5;
-		this.fireRate = 50;
-		this.nextFire = 0;
-		this.isShooting = false;
-		this.damage = 3;
+		this.bullets.setAll('strength', this.strength, false, false, 0, true);
 	}
 
 	Pistol.prototype.fire = function() {
