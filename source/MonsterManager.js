@@ -97,6 +97,7 @@ Doomsday.MonsterManager = (function() {
 		monster.animations.add('attack', Phaser.Animation.generateFrameNames('fatso/attack/fatso_attack_000', 1, 2, '.png'), 2);
 		monster.animations.add('spawn', Phaser.Animation.generateFrameNames('fatso/spawn/fatso_spawn_000', 1, 2, '.png'), 2);
 
+		monster.scale.setTo(2.0, 2.0);
 		return this.setStats(monster, 'fatso', 250, 50, 10, Phaser.Animation.generateFrameNames('fatso/guts/fatso_guts_000', 1, 3, '.png'));
 	};
 
@@ -141,7 +142,7 @@ Doomsday.MonsterManager = (function() {
 		var blood = this.blood.create(target.x, target.y, 'blood');
 		blood.animations.add('blood1', Phaser.Animation.generateFrameNames('blood_a_000', 1, 6));
 		blood.anchor.setTo(0.5, 0.5);
-		blood.scale.setTo(0.25, 0.25);
+		blood.scale.setTo(target.maxHealth / 500, target.maxHealth / 500);
 		blood.play('blood1', 24);
 		blood.rotation = target.rotation - (Math.PI / 2);;
 		blood.lifespan = 4000;
@@ -152,6 +153,7 @@ Doomsday.MonsterManager = (function() {
 		corpse.play('guts', 12);
 		corpse.rotation = target.rotation - (Math.PI / 2);
 		corpse.lifespan = 3000;
+		corpse.scale = target.scale;
 
 		target.destroy();
 		delete target.healthbar;

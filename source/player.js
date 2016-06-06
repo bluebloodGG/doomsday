@@ -92,6 +92,11 @@ Doomsday.Player = (function () {
 			this.weapon = this.weapons.submachinegun;
 			this.weapon.equip();
 		}, this);
+
+		this.rKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
+		this.rKey.onDown.add(function() {
+			this.weapon.reload();
+		}, this);
 	};
 
 	return Player;

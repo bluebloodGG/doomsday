@@ -7,8 +7,6 @@ Doomsday.Main = function(game) {
     this.map = null;
 	this.layer = null;
 	this.player = null;
-	this.enemy = null;
-	this.zombies = [];
 	this.monsterManager = null;
 };
 
@@ -34,7 +32,7 @@ Doomsday.Main.prototype.create = function() {
 
 	this.player = new Doomsday.Player(this.game);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso);
-	this.monsterManager.generateMonsters(100);
+	this.monsterManager.generateMonsters(0);
 
 
 };
@@ -42,23 +40,9 @@ Doomsday.Main.prototype.create = function() {
 Doomsday.Main.prototype.update = function() {
 	this.player.update();
 	this.monsterManager.update();
-
-	for (var i in this.zombies) {
-		var z = this.zombies[i];
-		var zs = this.zombies[i].sprite;
-		if (zs.alive) {
-			this.game.physics.arcade.collide(this.player.sprite, zs);
-			var hit = this.game.physics.arcade.overlap(this.player.weapon.bullets, zs, this.bulletHitEnemy, null, this);
-			if (hit) {
-				z.onHit(this.player.weapon.damage);
-			}
-			z.update();
-		}
-	}
-
-	this.game.physics.arcade.overlap(this.monsterManager.monsters, this.player.weapon.bullets, this.hit, null, this);
-
+	this.game.physics.arcade.overlap(this.player.weapon.bullets, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.collide(this.player, this.layer);
+	this.game.physics.arcade.collide(this.player.weapon.bullets, this.layer, this.hitWall, null, this);
 };
 
 Doomsday.Main.prototype.render = function() {
@@ -70,9 +54,10 @@ Doomsday.Main.prototype.render = function() {
 	this.game.debug.text("MS Min: " + this.game.time.msMin, left, top + 32);
 	this.game.debug.text("MS Max: " + this.game.time.msMax, left, top + 48);
 	this.game.debug.text('1: Pistol, 2: Submachinegun', left, top + 64);
+	this.game.debug.text('R: Reload', left, top + 80);
 };
 
-Doomsday.Main.prototype.hit = function(target, attacker) {
+Doomsday.Main.prototype.hit = function(attacker, target) {
 	this.game.plugins.screenShake.start(20);
 
 	target.damage(attacker.strength);
@@ -81,4 +66,8 @@ Doomsday.Main.prototype.hit = function(target, attacker) {
 	if(attacker.key === "bullet") {
 		attacker.kill();
 	}
+};
+
+Doomsday.Main.prototype.hitWall = function(attacker, target) {
+	attacker.kill();
 };

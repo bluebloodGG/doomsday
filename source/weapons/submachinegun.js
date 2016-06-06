@@ -12,6 +12,9 @@ var Submachinegun = (function() {
 		this.nextFire = 0;
 		this.isShooting = false;
 		this.strength = 15;
+		this.clipSize = 50;
+		this.currentAmmo = this.clipSize;
+		this.reloadTime = 2000;
 
 		this.bullets = game.add.group();
 		this.bullets.enableBody = true;
@@ -25,7 +28,7 @@ var Submachinegun = (function() {
 	}
 
 	Submachinegun.prototype.fire = function() {
-		if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
+		if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0 && this.currentAmmo > 0)
 		{
 			var bulletWorldPosition = new Phaser.Point(this.sprite.parent.x+2, this.sprite.parent.y-44);
 			bulletWorldPosition.rotate(this.sprite.parent.x, this.sprite.parent.y, this.sprite.parent.rotation);
@@ -35,12 +38,11 @@ var Submachinegun = (function() {
 			bullet.reset(bulletWorldPosition.x, bulletWorldPosition.y);
 
 			var spread = 3.0;
-			var angle = this.sprite.parent.angle-90 + (spread * (this.game.rnd.integerInRange(-4, 4)));
+			var angle = this.sprite.parent.angle-90// + (spread * (this.game.rnd.integerInRange(-4, 4)));
 
-			this.game.physics.arcade.velocityFromAngle(angle, 2000, bullet.body.velocity);
-
-
+			this.game.physics.arcade.velocityFromAngle(angle, 1000, bullet.body.velocity);
 			bullet.angle = angle;
+			this.currentAmmo--;
 			//bullet.angle = this.sprite.parent.angle-90;
 
 
@@ -48,6 +50,12 @@ var Submachinegun = (function() {
 		}
 
 		return false;
+	};
+
+	Submachinegun.prototype.reload = function() {
+		this.game.time.events.add(this.reloadTime, function() {
+			this.currentAmmo = this.clipSize;
+		}, this);
 	};
 
 	Submachinegun.prototype.equip = function() {

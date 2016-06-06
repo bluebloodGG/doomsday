@@ -21,6 +21,9 @@ var Pistol = (function() {
 		this.nextFire = 0;
 		this.isShooting = false;
 		this.strength = 30;
+		this.clipSize = 12;
+		this.currentAmmo = this.clipSize;
+		this.reloadTime = 1500;
 
 		this.bullets = game.add.group();
 		this.bullets.enableBody = true;
@@ -34,7 +37,7 @@ var Pistol = (function() {
 	}
 
 	Pistol.prototype.fire = function() {
-		if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
+		if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0 && this.currentAmmo > 0)
 		{
 			var bulletWorldPosition = new Phaser.Point(this.sprite.parent.x+2, this.sprite.parent.y-44);
 			bulletWorldPosition.rotate(this.sprite.parent.x, this.sprite.parent.y, this.sprite.parent.rotation);
@@ -57,6 +60,12 @@ var Pistol = (function() {
 		}
 
 		return false;
+	};
+
+	Pistol.prototype.reload = function() {
+		this.game.time.events.add(this.reloadTime, function() {
+			this.currentAmmo = this.clipSize;
+		}, this);
 	};
 
 	Pistol.prototype.equip = function() {
