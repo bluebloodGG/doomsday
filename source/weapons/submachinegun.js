@@ -28,7 +28,7 @@ var Submachinegun = (function() {
 	}
 
 	Submachinegun.prototype.fire = function() {
-		if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0 && this.currentAmmo > 0)
+		if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0 /*&& this.currentAmmo > 0*/)
 		{
 			var bulletWorldPosition = new Phaser.Point(this.sprite.parent.x+2, this.sprite.parent.y-44);
 			bulletWorldPosition.rotate(this.sprite.parent.x, this.sprite.parent.y, this.sprite.parent.rotation);
