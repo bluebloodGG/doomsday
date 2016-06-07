@@ -16,6 +16,7 @@ Doomsday.Main.prototype.preload = function() {
 };
 
 Doomsday.Main.prototype.create = function() {
+
 	// The 'mario' key here is the Loader key given in game.load.tilemap
 	this.map = this.game.add.tilemap('level1');
 
@@ -32,14 +33,15 @@ Doomsday.Main.prototype.create = function() {
 
 	this.player = new Doomsday.Player(this.game);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso);
-	this.monsterManager.generateMonsters(100);
-
-
+	this.monsterManager.generateMonsters(0);
+	this.hud = new Doomsday.Hud(this.game, this.player);
 };
 
 Doomsday.Main.prototype.update = function() {
 	this.player.update();
 	this.monsterManager.update();
+	this.hud.update();
+
 	this.game.physics.arcade.overlap(this.player.weapon.bullets, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.collide(this.player, this.layer);
 	this.game.physics.arcade.collide(this.player.weapon.bullets, this.layer, this.hitWall, null, this);

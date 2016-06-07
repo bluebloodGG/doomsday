@@ -18,6 +18,8 @@ Doomsday.Preloader.prototype = {
             Phaser.Keyboard.SPACEBAR
         ]);
 
+        this.game.load.image('ESPrade', 'assets/fonts/ESPrade (Cave).png');
+
         this.game.load.tilemap('level1', 'assets/maps/doomsday-level1.json', null, Phaser.Tilemap.TILED_JSON);
 		this.game.load.image('tiles', 'assets/maps/dungeon.png');
 
