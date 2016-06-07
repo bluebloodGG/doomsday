@@ -7,7 +7,7 @@ Doomsday.Hud = (function() {
 		this.player = player;
 
 		this.font = this.game.add.retroFont('ESPrade', 16, 16, Phaser.RetroFont.TEXT_SET1);
-		this.test = this.game.add.image(200,200, this.font);
+		this.test = this.game.add.image(64,this.game.camera.height-32, this.font);
 		this.test.fixedToCamera = true;
 	}
 
@@ -15,7 +15,9 @@ Doomsday.Hud = (function() {
 	Hud.prototype.constructor = Hud;
 
 	Hud.prototype.update = function() {
-		this.font.text = "TEST";
+
+		this.font.text = "Health: " + this.player.health + "/" + this.player.maxHealth
+		+ " Ammo: " + this.player.weapon.currentAmmo + "/" + this.player.weapon.clipSize;
 	};
 
 	return Hud;

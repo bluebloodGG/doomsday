@@ -19,6 +19,8 @@ Doomsday.Player = (function () {
 
 		this.game.camera.follow(this.torso);
 		this.speed = 350;
+		this.health = 100;
+		this.maxHealth = this.health;
 		this.weapons = {
 			pistol: new Pistol(this.game, this.torso),
 			submachinegun: new Submachinegun(this.game, this.torso)
