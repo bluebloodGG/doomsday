@@ -32,7 +32,7 @@ Doomsday.Main.prototype.create = function() {
 
 	this.player = new Doomsday.Player(this.game);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso);
-	this.monsterManager.generateMonsters(0);
+	this.monsterManager.generateMonsters(100);
 
 
 };

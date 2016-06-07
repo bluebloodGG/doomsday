@@ -1,3 +1,4 @@
+/* global Phaser Doomsday */
 Doomsday.Player = (function () {
 	function Player(game) {
 		Phaser.Group.call(this, game);
