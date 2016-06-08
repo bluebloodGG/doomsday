@@ -24,13 +24,19 @@ Doomsday.Main.prototype.create = function() {
 	// The first parameter is the tileset name, as specified in the Tiled map editor (and in the tilemap json file)
 	// The second parameter maps this name to the Phaser.Cache key 'tiles'
 	this.map.addTilesetImage('dungeon', 'tiles');
-	this.map.setCollision([2, 3, 6, 7, 8, 11, 12, 13, 16, 18]);
+	//this.map.setCollision([2, 3, 6, 7, 8, 11, 12, 13, 16, 18]);
+
 	//  Creates a layer from the World1 layer in the map data.
 	//  A Layer is effectively like a Phaser.Sprite, so is added to the display list.
-	this.layer = this.map.createLayer('Dungeon');
+	this.dungeon = this.map.createLayer('Dungeon');
+	this.lava = this.map.createLayer('Lava');
+
+	this.map.setCollisionBetween(10, 19, true, this.dungeon);
+	this.map.setCollisionBetween(24, 35, true, this.lava);
 
 	//  This resizes the game world to match the layer dimensions
-	this.layer.resizeWorld();
+	this.dungeon.resizeWorld();
+	this.lava.resizeWorld();
 
 	this.player = new Doomsday.Player(this.game);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso);
@@ -57,8 +63,9 @@ Doomsday.Main.prototype.update = function() {
 	this.hud.update();
 
 	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.monsterManager.monsters, this.hit, null, this);
-	this.game.physics.arcade.collide(this.player, this.layer);
-	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.layer, this.hitWall, null, this);
+	this.game.physics.arcade.collide(this.player.torso, this.dungeon);
+	this.game.physics.arcade.overlap(this.player.torso, this.lava, this.walkingOnLava, null, this);
+	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.dungeon, this.hitWall, null, this);
 };
 
 Doomsday.Main.prototype.render = function() {
@@ -86,6 +93,11 @@ Doomsday.Main.prototype.hit = function(attacker, target) {
 
 Doomsday.Main.prototype.hitWall = function(attacker, target) {
 	attacker.kill();
+};
+
+Doomsday.Main.prototype.walkingOnLava = function(player, lavaTile) {
+	if(lavaTile.collides)
+		this.player.health--;
 };
 
 Doomsday.Main.prototype.handleInput = function() {

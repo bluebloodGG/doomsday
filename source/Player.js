@@ -6,8 +6,10 @@ Doomsday.Player = (function () {
 
 		this.enableBody = true;
 		this.physicsBodyType = Phaser.Physics.ARCADE;
-		this.legs = this.game.add.sprite(128, 128, 'soldier', 'soldier_legs_0001.png');
-		this.torso = this.game.add.sprite(128, 128, 'soldier', 'soldier_torso_1h.png');
+		var startX = this.game.world.centerX;
+		var startY = this.game.world.centerY;
+		this.legs = this.game.add.sprite(startX, startY, 'soldier', 'soldier_legs_0001.png');
+		this.torso = this.game.add.sprite(startX, startY, 'soldier', 'soldier_torso_1h.png');
 
 		this.game.physics.arcade.enable(this.torso);
 		this.torso.anchor.set(0.5);
