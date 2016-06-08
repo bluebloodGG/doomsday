@@ -21,13 +21,14 @@ Doomsday.Player = (function () {
 		this.speed = 350;
 		this.health = 100;
 		this.maxHealth = this.health;
-		this.weapons = {
-			pistol: new Pistol(this.game, this.torso),
-			submachinegun: new Submachinegun(this.game, this.torso)
-		};
+		this.weaponManager = new Doomsday.WeaponManager(this.game, this);
+		// this.weapons = {
+		// 	pistol: new Pistol(this.game, this.torso),
+		// 	submachinegun: new Submachinegun(this.game, this.torso)
+		// };
 
-		this.weapon = this.weapons.pistol;
-		this.weapon.equip();
+		// this.weapon = this.weapons.pistol;
+		// this.weapon.equip();
 	};
 
 	Player.prototype = Object.create(Phaser.Group.prototype);
@@ -73,7 +74,7 @@ Doomsday.Player = (function () {
 		}
 
 		if (this.game.input.activePointer.isDown) {
-			this.weapon.fire();
+			this.weaponManager.fire();
 		}
 
 		if (moving) {
@@ -84,16 +85,12 @@ Doomsday.Player = (function () {
 
 		this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
 		this.key1.onDown.add(function () {
-			this.weapon.unequip();
-			this.weapon = this.weapons.pistol;
-			this.weapon.equip();
+			this.weaponManager.selectWeapon('pistol');
 		}, this);
 
 		this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
 		this.key2.onDown.add(function () {
-			this.weapon.unequip();
-			this.weapon = this.weapons.submachinegun;
-			this.weapon.equip();
+			this.weaponManager.selectWeapon('smg');
 		}, this);
 
 // 		this.rKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);

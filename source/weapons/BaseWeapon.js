@@ -1,10 +1,11 @@
 /* Global Phaser Doomsday */
 Doomsday.BaseWeapon = (function () {
-	function BaseWeapon(game) {
+	function BaseWeapon(game, parent, sprite, stats) {
 		this.game = game;
+		this.parent = parent;
 
-		this.currentRateOfFire = 5;
-		this.fireRate = 50;
+		this.currentRateOfFire = stats.currentRateOfFire;
+		this.fireRate = stats.fireRate;
 		this.nextFire = 0;
 		this.isShooting = false;
 		this.strength = 30;
@@ -22,26 +23,29 @@ Doomsday.BaseWeapon = (function () {
 		this.bullets.setAll('outOfBoundsKill', true);
 		this.bullets.setAll('checkWorldBounds', true);
 		this.bullets.setAll('strength', this.strength, false, false, 0, true);
+
+		this.sprite = this.parent.addChild(sprite);
+		this.sprite.anchor.setTo(0.5, 0.5);
 	}
 
 	BaseWeapon.prototype.fire = function () {
 		if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0 && this.currentAmmo > 0) {
-			var bulletWorldPosition = new Phaser.Point(this.sprite.parent.x + 2, this.sprite.parent.y - 44);
-			bulletWorldPosition.rotate(this.sprite.parent.x, this.sprite.parent.y, this.sprite.parent.rotation);
+			var bulletWorldPosition = new Phaser.Point(this.parent.x + 2, this.parent.y - 44);
+			bulletWorldPosition.rotate(this.parent.x, this.parent.y, this.parent.rotation);
 			this.nextFire = this.game.time.now + (1000 / this.currentRateOfFire);
 
 			var bullet = this.bullets.getFirstExists(false);
 			bullet.reset(bulletWorldPosition.x, bulletWorldPosition.y);
-			this.game.physics.arcade.velocityFromAngle(this.sprite.parent.angle - 90, 1000, bullet.body.velocity);
-			bullet.angle = this.sprite.parent.angle - 90;
+			this.game.physics.arcade.velocityFromAngle(this.parent.angle - 90, 1000, bullet.body.velocity);
+			bullet.angle = this.parent.angle - 90;
 
-			var gf = this.gunflash;
-			gf.visible = true;
-			if (!this.anim.gunflash.isPlaying) {
-				this.anim.gunflash.play(48, false).onComplete.add(function () {
-					gf.visible = false;
-				});
-			}
+			// var gf = this.gunflash;
+			// gf.visible = true;
+			// if (!this.anim.gunflash.isPlaying) {
+			// 	this.anim.gunflash.play(48, false).onComplete.add(function () {
+			// 		gf.visible = false;
+			// 	});
+			// }
 
 			return true;
 		}

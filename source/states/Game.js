@@ -42,9 +42,9 @@ Doomsday.Main.prototype.update = function() {
 	this.monsterManager.update();
 	this.hud.update();
 
-	this.game.physics.arcade.overlap(this.player.weapon.bullets, this.monsterManager.monsters, this.hit, null, this);
+	this.game.physics.arcade.overlap(this.player.weaponManager.selectedWeapon.bullets, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.collide(this.player, this.layer);
-	this.game.physics.arcade.collide(this.player.weapon.bullets, this.layer, this.hitWall, null, this);
+	this.game.physics.arcade.collide(this.player.weaponManager.selectedWeapon.bullets, this.layer, this.hitWall, null, this);
 };
 
 Doomsday.Main.prototype.render = function() {
