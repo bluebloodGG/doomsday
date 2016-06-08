@@ -1,6 +1,6 @@
 /* global Phaser Doomsday */
 Doomsday.Bullet = (function() {
-	function Bullet(game, key) {
+	function Bullet(game, key, damage) {
 		Phaser.Sprite.call(this, game, 0, 0, key);
 		this.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
 		this.anchor.set(0.5);
@@ -9,6 +9,7 @@ Doomsday.Bullet = (function() {
 		this.exists = false;
 		this.tracking = false;
 		this.scaleSpeed = 0;
+		this.damage = damage;
 	};
 
 	Bullet.prototype = Object.create(Phaser.Sprite.prototype);

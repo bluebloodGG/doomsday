@@ -1,19 +1,19 @@
 /* global Phaser Doomsday */
 Doomsday.Player = (function () {
 	function Player(game) {
-		Phaser.Group.call(this, game);
 
 		this.game = game;
 
 		this.enableBody = true;
 		this.physicsBodyType = Phaser.Physics.ARCADE;
-		this.legs = this.create(128, 128, 'soldier', 'soldier_legs_0001.png');
-		this.torso = this.create(128, 128, 'soldier', 'soldier_torso_1h.png');
+		this.legs = this.game.add.sprite(128, 128, 'soldier', 'soldier_legs_0001.png');
+		this.torso = this.game.add.sprite(128, 128, 'soldier', 'soldier_torso_1h.png');
 
-		this.setAll('anchor.x', 0.5);
-		this.setAll('anchor.y', 0.5);
-		this.setAll('outOfBoundsKill', true);
-		this.setAll('checkWorldBounds', true);
+		this.game.physics.arcade.enable(this.torso);
+		this.torso.anchor.set(0.5);
+		this.torso.body.checkWorldBounds = true;
+		this.legs.anchor.set(0.5);
+
 
 		this.legs.animations.add('walk', Phaser.Animation.generateFrameNames('soldier_legs_000', 1, 4, '.png'));
 
@@ -21,26 +21,37 @@ Doomsday.Player = (function () {
 		this.speed = 350;
 		this.health = 100;
 		this.maxHealth = this.health;
-		this.weaponManager = new Doomsday.WeaponManager(this.game, this);
-		// this.weapons = {
-		// 	pistol: new Pistol(this.game, this.torso),
-		// 	submachinegun: new Submachinegun(this.game, this.torso)
-		// };
 
-		// this.weapon = this.weapons.pistol;
-		// this.weapon.equip();
+		this.weapons = [];
+		this.currentWeapon = 0;
+		this.weaponName = null;
+
+		this.weapons.push(new Doomsday.Weapons.Pistol(this.game, this));
+		this.weapons.push(new Doomsday.Weapons.SMG(this.game, this));
+
+		this.currentWeapon = 0;
+		for(var i = 1; i < this.weapons.length; i++) {
+			this.weapons[i].visible = false;
+		}
+
 	};
 
-	Player.prototype = Object.create(Phaser.Group.prototype);
-    Player.prototype.constructor = Player;
-
 	Player.prototype.update = function () {
-		this.legs.x = this.torso.x;
-		this.legs.y = this.torso.y;
-
 		this.handleInput();
 
+		this.legs.x = this.torso.x;
+		this.legs.y = this.torso.y;
+		this.legs.moves = false;
 
+		// this.game.debug.body(this.legs);
+    	// this.game.debug.body(this.torso);
+
+		// this.game.debug.bodyInfo(this.legs, 500, 132);
+		// this.game.debug.spriteBounds(this.torso, 500, 232);
+	};
+
+	Player.prototype.fire = function() {
+		this.weapons[this.currentWeapon].fire(this.torso, this.torso.angle);
 	};
 
 	Player.prototype.handleInput = function () {
@@ -73,9 +84,9 @@ Doomsday.Player = (function () {
 			this.torso.body.velocity.x = 0;
 		}
 
-		if (this.game.input.activePointer.isDown) {
-			this.weaponManager.fire();
-		}
+		// if (this.game.input.activePointer.isDown) {
+		// 	this.weaponManager.fire();
+		// }
 
 		if (moving) {
 			this.legs.animations.play('walk', 4, true);
@@ -83,76 +94,26 @@ Doomsday.Player = (function () {
 			this.legs.animations.stop('walk');
 		}
 
-		this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-		this.key1.onDown.add(function () {
-			this.weaponManager.selectWeapon('pistol');
-		}, this);
-
-		this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-		this.key2.onDown.add(function () {
-			this.weaponManager.selectWeapon('smg');
-		}, this);
-
 // 		this.rKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
 // 		this.rKey.onDown.add(function() {
 // 			this.weapon.reload();
 // 		}, this);
 	};
 
+	Player.prototype.selectWeapon = function(index) {
+		this.weapons[this.currentWeapon].weapon.visible = false;
+		this.weapons[this.currentWeapon].bullets.visible = false;
+		this.weapons[this.currentWeapon].bullets.callAll('reset', null, 0, 0);
+		this.weapons[this.currentWeapon].bullets.setAll('exists', false);
+
+		this.currentWeapon = index;
+		if(this.currentWeapon < 0 || this.currentWeapon >= this.weapons.length) {
+			this.currentWeapon = 0;
+		}
+		this.weapons[this.currentWeapon].weapon.visible = true;
+		this.weapons[this.currentWeapon].bullets.visible = true;
+		console.log(this.weapons[this.currentWeapon].weapon.name);
+	};
+
 	return Player;
 } ());
-
-
-
-
-// var Player2 = (function () {
-// 	function Player(game) {
-// 		this.game = game;
-
-// 		this.soldier = {
-// 			torso: this.game.add.sprite(128, 128, 'soldier', 'soldier_torso_1h.png'),
-// 			legs: this.game.add.sprite(128, 128, 'soldier', 'soldier_legs_0001.png')
-// 		};
-
-// 		this.soldier.torso.anchor.setTo(0.5, 0.5);
-// 		this.soldier.legs.anchor.setTo(0.5, 0.5);
-// 		this.soldier.legs.bringToTop();
-// 		this.soldier.torso.bringToTop();
-
-
-// 		this.walkingAnimation = this.soldier.legs.animations.add('walk', Phaser.Animation.generateFrameNames('soldier_legs_000', 1, 4, '.png'));
-
-
-
-// 		this.weapon = this.weapons.pistol;
-// 		this.weapon.equip();
-
-// 		this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-// 		this.key1.onDown.add(function () {
-// 			this.weapon.unequip();
-// 			this.weapon = this.weapons.pistol;
-// 			this.weapon.equip();
-// 		}, this);
-
-// 		this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
-// 		this.key2.onDown.add(function () {
-// 			this.weapon.unequip();
-// 			this.weapon = this.weapons.submachinegun;
-// 			this.weapon.equip();
-// 		}, this);
-// 	}
-
-// 	Player.prototype.update = function () {
-// 		this._handleInput();
-
-// 		this.soldier.legs.x = this.soldier.torso.x;
-// 		this.soldier.legs.y = this.soldier.torso.y;
-// 		//this.soldier.legs.rotation = this.soldier.torso.rotation;
-// 	};
-
-// 	Player.prototype._handleInput = function () {
-
-// 	};
-
-// 	return Player;
-// } ());

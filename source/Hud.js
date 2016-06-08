@@ -16,8 +16,8 @@ Doomsday.Hud = (function() {
 
 	Hud.prototype.update = function() {
 
-		this.font.text = "Health: " + this.player.health + "/" + this.player.maxHealth
-		+ " Ammo: " + this.player.weaponManager.selectedWeapon.currentAmmo + "/" + this.player.weaponManager.selectedWeapon.clipSize;
+		this.font.text = "Health: " + this.player.health + "/" + this.player.maxHealth +
+		" Weapon: " + this.player.weapons[this.player.currentWeapon].weapon.name;
 	};
 
 	return Hud;

@@ -9,9 +9,6 @@ Doomsday.Main = function(game) {
 	this.player = null;
 	this.monsterManager = null;
 
-	this.weapons = [];
-	this.currentWeapon = 0;
-	this.weaponName = null;
 };
 
 Doomsday.Main.prototype.preload = function() {
@@ -37,28 +34,31 @@ Doomsday.Main.prototype.create = function() {
 
 	this.player = new Doomsday.Player(this.game);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso);
-	this.monsterManager.generateMonsters(0);
+	this.monsterManager.generateMonsters(100);
 	this.hud = new Doomsday.Hud(this.game, this.player);
 
-	this.weapons.push(new Doomsday.Weapons.Pistol(this.game, this.player));
-	this.currentWeapon = 0;
-	for(var i = 1; i < this.weapons.length; i++) {
-		this.weapons[i].visible = false;
-	}
+	this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+	this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
+	this.key3 = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+	this.key1.onDown.add(this.onSelectWeapon, this, 0, 0);
+	this.key2.onDown.add(this.onSelectWeapon, this, 0, 1);
+	this.key3.onDown.add(this.onSelectWeapon, this, 0, 2);
+
+	this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ONE);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TWO);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.THREE);
+
 };
 
 Doomsday.Main.prototype.update = function() {
+	this.handleInput();
 	this.player.update();
 	this.monsterManager.update();
 	this.hud.update();
 
-	if(this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-		this.weapons[this.currentWeapon].fire(this.player.torso, this.player.torso.angle);
-	}
-
-	this.game.physics.arcade.overlap(this.player.weaponManager.selectedWeapon.bullets, this.monsterManager.monsters, this.hit, null, this);
+	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.collide(this.player, this.layer);
-	this.game.physics.arcade.collide(this.player.weaponManager.selectedWeapon.bullets, this.layer, this.hitWall, null, this);
+	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.layer, this.hitWall, null, this);
 };
 
 Doomsday.Main.prototype.render = function() {
@@ -74,9 +74,9 @@ Doomsday.Main.prototype.render = function() {
 };
 
 Doomsday.Main.prototype.hit = function(attacker, target) {
-	this.game.plugins.screenShake.start(20);
+	//this.game.plugins.screenShake.start(20);
 
-	target.damage(attacker.strength);
+	target.damage(attacker.damage);
 	if(target.health <= 0) { target.health = 0; }
 
 	if(attacker.key === "bullet") {
@@ -86,4 +86,14 @@ Doomsday.Main.prototype.hit = function(attacker, target) {
 
 Doomsday.Main.prototype.hitWall = function(attacker, target) {
 	attacker.kill();
+};
+
+Doomsday.Main.prototype.handleInput = function() {
+	if (this.game.input.activePointer.leftButton.isDown) {
+		this.player.fire();
+	}
+};
+
+Doomsday.Main.prototype.onSelectWeapon = function(e, weaponIndex) {
+	this.player.selectWeapon(weaponIndex);
 };
