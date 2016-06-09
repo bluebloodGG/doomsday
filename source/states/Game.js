@@ -30,6 +30,7 @@ Doomsday.Main.prototype.create = function() {
 	//  A Layer is effectively like a Phaser.Sprite, so is added to the display list.
 	this.dungeon = this.map.createLayer('Dungeon');
 	this.lava = this.map.createLayer('Lava');
+	this.spawners = this.map.objects.Spawners;
 
 	this.map.setCollisionBetween(10, 19, true, this.dungeon);
 	this.map.setCollisionBetween(24, 35, true, this.lava);
@@ -42,7 +43,8 @@ Doomsday.Main.prototype.create = function() {
 	this.layerPlayer = this.game.add.group();
 
 	this.player = new Doomsday.Player(this.game, this.layerPlayer);
-	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso, this.layerMonsters);
+	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso, this.layerMonsters, this.spawners);
+
 	this.monsterManager.generateMonsters(100);
 	this.hud = new Doomsday.Hud(this.game, this.player);
 
