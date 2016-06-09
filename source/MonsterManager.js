@@ -1,13 +1,13 @@
 /* global Phaser */
 Doomsday.MonsterManager = (function() {
 
-	function MonsterManager(game, player) {
+	function MonsterManager(game, player, parent) {
 		this.game = game;
 		this.player = player;
-		this.monsters = this.game.add.group();
-		this.corpses = this.game.add.group();
-		this.blood = this.game.add.group();
 
+		this.corpses = this.game.add.group(parent, 'Corpses');
+		this.blood = this.game.add.group(parent, 'Blood');
+		this.monsters = this.game.add.group(parent, 'Monsters');
 	}
 
 	MonsterManager.prototype.update = function() {

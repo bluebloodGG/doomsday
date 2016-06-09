@@ -38,8 +38,11 @@ Doomsday.Main.prototype.create = function() {
 	this.dungeon.resizeWorld();
 	this.lava.resizeWorld();
 
-	this.player = new Doomsday.Player(this.game);
-	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso);
+	this.layerMonsters = this.game.add.group();
+	this.layerPlayer = this.game.add.group();
+
+	this.player = new Doomsday.Player(this.game, this.layerPlayer);
+	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso, this.layerMonsters);
 	this.monsterManager.generateMonsters(100);
 	this.hud = new Doomsday.Hud(this.game, this.player);
 

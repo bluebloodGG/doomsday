@@ -1,6 +1,6 @@
 /* global Phaser Doomsday */
 Doomsday.Player = (function () {
-	function Player(game) {
+	function Player(game, parent) {
 
 		this.game = game;
 
@@ -8,8 +8,8 @@ Doomsday.Player = (function () {
 		this.physicsBodyType = Phaser.Physics.ARCADE;
 		var startX = this.game.world.centerX;
 		var startY = this.game.world.centerY;
-		this.legs = this.game.add.sprite(startX, startY, 'soldier', 'soldier_legs_0001.png');
-		this.torso = this.game.add.sprite(startX, startY, 'soldier', 'soldier_torso_1h.png');
+		this.legs = this.game.add.sprite(startX, startY, 'soldier', 'soldier_legs_0001.png', parent);
+		this.torso = this.game.add.sprite(startX, startY, 'soldier', 'soldier_torso_1h.png', parent);
 
 		this.game.physics.arcade.enable(this.torso);
 		this.torso.anchor.set(0.5);
