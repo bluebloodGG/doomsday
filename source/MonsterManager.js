@@ -1,9 +1,10 @@
 /* global Phaser */
 Doomsday.MonsterManager = (function() {
 
-	function MonsterManager(game, player) {
+	function MonsterManager(game, player, spawners) {
 		this.game = game;
 		this.player = player;
+		this.spawners = spawners;
 		this.monsters = this.game.add.group();
 		this.corpses = this.game.add.group();
 		this.blood = this.game.add.group();
@@ -66,10 +67,14 @@ Doomsday.MonsterManager = (function() {
 		var monster = this.monsters.create(this.game.world.randomX, this.game.world.randomY, 'zombiearmy');
 		monster.anchor.setTo(0.5, 0.5);
 
-
-		do {
-			monster.reset(this.game.world.randomX, this.game.world.randomY);
-		} while(Phaser.Math.distance(this.player.x, this.player.y, monster.x, monster.y) <= 200);
+		var idx = this.game.rnd.between(0, this.spawners.length - 1);
+		var spawner = this.spawners[idx];
+		var startX = this.game.rnd.between(spawner.x, spawner.x + spawner.width);
+		var startY = this.game.rnd.between(spawner.y, spawner.y + spawner.height);
+		monster.reset(startX, startY);
+		// do {
+		// 	monster.reset(this.game.world.randomX, this.game.world.randomY);
+		// } while(Phaser.Math.distance(this.player.x, this.player.y, monster.x, monster.y) <= 200);
 
 		var rnd = Math.random();
 

@@ -6,8 +6,8 @@ Doomsday.Player = (function () {
 
 		this.enableBody = true;
 		this.physicsBodyType = Phaser.Physics.ARCADE;
-		var startX = this.game.world.centerX;
-		var startY = this.game.world.centerY;
+		var startX = 750;//this.game.world.centerX;
+		var startY = 500;//this.game.world.centerY;
 		this.legs = this.game.add.sprite(startX, startY, 'soldier', 'soldier_legs_0001.png');
 		this.torso = this.game.add.sprite(startX, startY, 'soldier', 'soldier_torso_1h.png');
 
