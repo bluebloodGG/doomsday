@@ -150,10 +150,9 @@ Doomsday.Player = (function () {
 		this.corpse.x = this.torso.x
 		this.corpse.y = this.torso.y
 		this.corpse.animations.play('splat', 14, false);
-		this.corpse.lifespan = 1000;
-		this.game.camera.fade("#000", 2000)
-		this.game.camera.onFadeComplete.add(function() {
-			this.game.state.start('Menu');
+		this.game.camera.fade("#000", 1000)
+		this.game.camera.onFadeComplete.addOnce(function() {
+			this.game.state.start('GameOver');
 		}, this);
 
 	}

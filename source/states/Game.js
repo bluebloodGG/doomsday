@@ -8,7 +8,6 @@ Doomsday.Main = function(game) {
 	this.layer = null;
 	this.player = null;
 	this.monsterManager = null;
-
 };
 
 Doomsday.Main.prototype.preload = function() {
@@ -45,7 +44,7 @@ Doomsday.Main.prototype.create = function() {
 	this.player = new Doomsday.Player(this.game, this.layerPlayer);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso, this.layerMonsters, this.spawners);
 
-	this.monsterManager.generateMonsters(0);
+	this.monsterManager.generateMonsters(50);
 	this.hud = new Doomsday.Hud(this.game, this.player);
 
 	this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -59,6 +58,10 @@ Doomsday.Main.prototype.create = function() {
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TWO);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.THREE);
 
+	this.game.score = 0;
+	this.game.startTime = 0;
+	this.game.elapsedTime = 0;
+	this.game.startTime = this.game.time.time;
 };
 
 Doomsday.Main.prototype.update = function() {
@@ -69,14 +72,19 @@ Doomsday.Main.prototype.update = function() {
 
 	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.collide(this.player.torso, this.dungeon);
+	this.game.physics.arcade.overlap(this.player.torso, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.overlap(this.player.torso, this.lava, this.walkingOnLava, null, this);
 	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.dungeon, this.hitWall, null, this);
+
+	var ms = (this.game.time.time - this.game.startTime)
+	var sec = Math.round(ms/1000);
+	this.game.elapsedTime = this.formatTime(sec);
 };
 
 Doomsday.Main.prototype.render = function() {
 	this.monsterManager.render();
-	var left = 8;
-	var top = 16;
+	var left = 16;
+	var top = 64;
 	this.game.debug.text("FPS: " + this.game.time.fps, left, top);
 	this.game.debug.text("Frames: " + this.game.time.frames, left, top + 16);
 	this.game.debug.text("MS Min: " + this.game.time.msMin, left, top + 32);
@@ -89,10 +97,17 @@ Doomsday.Main.prototype.hit = function(attacker, target) {
 	//this.game.plugins.screenShake.start(20);
 
 	target.damage(attacker.damage);
-	if(target.health <= 0) { target.health = 0; }
+	if(target.health <= 0) {
+		target.health = 0;
+		this.game.score += target.worth;
+	}
 
 	if(attacker.key === "bullet") {
 		attacker.kill();
+	}
+
+	if(attacker.parent.name === "Player") {
+		attacker.parent.damage(1);
 	}
 };
 
@@ -113,4 +128,12 @@ Doomsday.Main.prototype.handleInput = function() {
 
 Doomsday.Main.prototype.onSelectWeapon = function(e, weaponIndex) {
 	this.player.selectWeapon(weaponIndex);
+};
+
+
+Doomsday.Main.prototype.formatTime = function(s) {
+	// Convert seconds (s) to a nicely formatted and padded time string
+	var minutes = "0" + Math.floor(s / 60);
+	var seconds = "0" + (s - minutes * 60);
+	return minutes.substr(-2) + ":" + seconds.substr(-2);
 };

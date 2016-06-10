@@ -7,6 +7,7 @@
     game.state.add('Preloader', Doomsday.Preloader);
     game.state.add('Menu', Doomsday.Menu);
     game.state.add('Game', Doomsday.Main);
+    game.state.add('GameOver', Doomsday.GameOver);
     //game.state.add('GameOver', Doomsday.GameOver);
     game.state.start('Boot');
 })();

@@ -31,6 +31,13 @@ Doomsday.Preloader.prototype = {
 		this.game.load.image('soldier-legs-4', 'assets/soldier/soldier_legs_0004.png');
 		this.game.load.image('bullet', 'assets/projectile2.png');
 
+		this.game.load.image('doomsday', 'assets/doomsday.png');
+		this.game.load.image('gameover', 'assets/gameover.png');
+		this.game.load.image('press-space-to-play', 'assets/press-space-to-play.png');
+		this.game.load.image('press-esc-to-restart', 'assets/press-esc-to-restart.png');
+		this.game.load.image('wallpaper', 'assets/skull-782385_1280.png');
+		this.game.load.image('gameover-wallpaper', 'assets/smoke-1232654_1280.png');
+
 		this.game.load.atlas('soldier', 'assets/soldier.png', 'assets/soldier.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 		this.game.load.atlas('zombiearmy', 'assets/zombiearmy.png', 'assets/zombiearmy.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
 		this.game.load.atlas('weapons', 'assets/weapons.png', 'assets/weapons.json', Phaser.Loader.TEXTURE_ATLAS_JSON_ARRAY);
