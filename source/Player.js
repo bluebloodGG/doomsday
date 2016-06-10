@@ -1,18 +1,20 @@
 /* global Phaser Doomsday */
 Doomsday.Player = (function () {
 	function Player(game, parent) {
-
+		Phaser.Group.call(this, game, parent, 'Player', false, true, Phaser.Physics.ARCADE)
 		this.game = game;
 
 		this.enableBody = true;
 		this.physicsBodyType = Phaser.Physics.ARCADE;
 
-		var startX = 750;//this.game.world.centerX;
-		var startY = 500;//this.game.world.centerY;
-		this.legs = this.game.add.sprite(startX, startY, 'soldier', 'soldier_legs_0001.png', parent);
-		this.torso = this.game.add.sprite(startX, startY, 'soldier', 'soldier_torso_1h.png', parent);
+		var startX = this.game.world.centerX;
+		var startY = this.game.world.centerY;
+		this.legs = new Phaser.Sprite(this.game, startX, startY, 'soldier', 'soldier_legs_0001.png');
+		this.torso = new Phaser.Sprite(this.game, startX, startY, 'soldier', 'soldier_torso_1h.png');
+		this.add(this.legs);
+		this.add(this.torso);
 
-		this.game.physics.arcade.enable(this.torso);
+		//this.game.physics.arcade.enable(this.torso);
 		this.torso.anchor.set(0.5);
 		this.torso.body.checkWorldBounds = true;
 		this.legs.anchor.set(0.5);
@@ -38,6 +40,9 @@ Doomsday.Player = (function () {
 		}
 
 	};
+
+	Player.prototype = Object.create(Phaser.Group.prototype);
+	Player.prototype.constructor = Player;
 
 	Player.prototype.update = function () {
 		this.handleInput();
@@ -117,6 +122,23 @@ Doomsday.Player = (function () {
 		this.weapons[this.currentWeapon].bullets.visible = true;
 		console.log(this.weapons[this.currentWeapon].weapon.name);
 	};
+
+	Player.prototype.damage = function(amount) {
+		if(this.alive) {
+			this.health -= amount;
+
+			if(this.health <= 0) {
+				this.die();
+			}
+		}
+
+		return this;
+	}
+
+	Player.prototype.die = function() {
+		this.callAll('kill');
+		this.alive = false;
+	}
 
 	return Player;
 } ());

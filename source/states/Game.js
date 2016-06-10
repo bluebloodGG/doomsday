@@ -102,7 +102,7 @@ Doomsday.Main.prototype.hitWall = function(attacker, target) {
 
 Doomsday.Main.prototype.walkingOnLava = function(player, lavaTile) {
 	if(lavaTile.collides)
-		this.player.health--;
+		this.player.damage(1);
 };
 
 Doomsday.Main.prototype.handleInput = function() {
