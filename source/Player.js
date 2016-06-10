@@ -11,15 +11,20 @@ Doomsday.Player = (function () {
 		var startY = this.game.world.centerY;
 		this.legs = new Phaser.Sprite(this.game, startX, startY, 'soldier', 'soldier_legs_0001.png');
 		this.torso = new Phaser.Sprite(this.game, startX, startY, 'soldier', 'soldier_torso_1h.png');
+
 		this.add(this.legs);
 		this.add(this.torso);
+		this.corpse = this.game.add.sprite(0, 0, 'zombiearmy', '');
+		this.corpse.animations.add('splat', Phaser.Animation.generateFrameNames('splatter_1/splatter_1_000', 1, 7, '.png'))
+		this.corpse.visible = false;
+		this.corpse.anchor.set(0.5);
+		this.corpse.scale.set(2);
+		this.corpse.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
 
 		//this.game.physics.arcade.enable(this.torso);
 		this.torso.anchor.set(0.5);
 		this.torso.body.checkWorldBounds = true;
 		this.legs.anchor.set(0.5);
-
-
 		this.legs.animations.add('walk', Phaser.Animation.generateFrameNames('soldier_legs_000', 1, 4, '.png'));
 
 		this.game.camera.follow(this.torso);
@@ -59,10 +64,12 @@ Doomsday.Player = (function () {
 	};
 
 	Player.prototype.fire = function() {
+		if(!this.alive) return;
 		this.weapons[this.currentWeapon].fire(this.torso, this.torso.angle);
 	};
 
 	Player.prototype.handleInput = function () {
+		if(!this.alive) return;
 
 		var moving = false;
 		this.torso.rotation = this.game.physics.arcade.angleToPointer(this.torso) + (Math.PI / 2);
@@ -138,6 +145,17 @@ Doomsday.Player = (function () {
 	Player.prototype.die = function() {
 		this.callAll('kill');
 		this.alive = false;
+
+		this.corpse.visible = true;
+		this.corpse.x = this.torso.x
+		this.corpse.y = this.torso.y
+		this.corpse.animations.play('splat', 14, false);
+		this.corpse.lifespan = 1000;
+		this.game.camera.fade("#000", 2000)
+		this.game.camera.onFadeComplete.add(function() {
+			this.game.state.start('Menu');
+		}, this);
+
 	}
 
 	return Player;

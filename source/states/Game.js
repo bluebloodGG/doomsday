@@ -45,7 +45,7 @@ Doomsday.Main.prototype.create = function() {
 	this.player = new Doomsday.Player(this.game, this.layerPlayer);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso, this.layerMonsters, this.spawners);
 
-	this.monsterManager.generateMonsters(100);
+	this.monsterManager.generateMonsters(0);
 	this.hud = new Doomsday.Hud(this.game, this.player);
 
 	this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
