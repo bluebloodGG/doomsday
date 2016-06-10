@@ -69,6 +69,7 @@ Doomsday.Main.prototype.update = function() {
 
 	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.collide(this.player.torso, this.dungeon);
+	this.game.physics.arcade.overlap(this.player.torso, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.overlap(this.player.torso, this.lava, this.walkingOnLava, null, this);
 	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.dungeon, this.hitWall, null, this);
 };
