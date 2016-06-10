@@ -19,7 +19,7 @@ Doomsday.MonsterManager = (function () {
 				var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
 				monster.rotation = rotation - (Math.PI / 2);
 				monster.animations.play('move');
-				monster.healthbar.update();
+				//monster.healthbar.update();
 			}
 		}, this);
 
@@ -40,7 +40,7 @@ Doomsday.MonsterManager = (function () {
 
 	MonsterManager.prototype.render = function () {
 		this.monsters.forEachAlive(function (monster) {
-			monster.healthbar.render();
+			//monster.healthbar.render();
 		}, this);
 	}
 
@@ -60,7 +60,7 @@ Doomsday.MonsterManager = (function () {
 		monster.strength = strength;
 		monster.spawning = true;
 		monster.corpseFrames = corpseFrames;
-		monster.healthbar = new Doomsday.Healthbar(this.game, monster);
+		//monster.healthbar = new Doomsday.Healthbar(this.game, monster);
 
 		return monster;
 	};
@@ -172,7 +172,7 @@ Doomsday.MonsterManager = (function () {
 		corpse.scale = target.scale;
 
 		target.destroy();
-		target.healthbar.onDestroy();
+		//target.healthbar.onDestroy();
 	};
 
 	return MonsterManager;
