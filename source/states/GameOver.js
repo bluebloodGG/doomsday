@@ -103,7 +103,7 @@ Doomsday.GameOver.prototype = {
     buildHighscoreString: function (index, highscore) {
         var place = String("     " + (index + 1)).slice(-5);
         if (!highscore.name) highscore.name = "";
-        var name = String("   " + highscore.name.substring(0, 3)).slice(-3)
+        var name = String("          " + highscore.name.substring(0, 10)).slice(-10)
         var elapsedTime = highscore.elapsedTime
         var score = String("....." + highscore.score).slice(-5);
         return [place, name, elapsedTime, score].join(" - ");
