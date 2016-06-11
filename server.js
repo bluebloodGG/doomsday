@@ -19,9 +19,9 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-app.get("/ping", function(req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({"result": "pong"}));
+app.get("/ping", function (req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({ "result": "pong" }));
 });
 
 app.get("/highscores", function (req, res) {
@@ -31,9 +31,11 @@ app.get("/highscores", function (req, res) {
       result.unshift(child.val());
     });
 
-
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(result));
+  }).catch(function (e) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(e));
   });
 
 });
