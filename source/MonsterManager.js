@@ -11,7 +11,7 @@ Doomsday.MonsterManager = (function () {
 		this.gameOver = false;
 
 		this.stats = {
-			crow: 		{ spawn: .30, health: 100, speed: 350, strength: 10, worth: 10 },
+			crow: 		{ spawn: .30, health: 50, speed: 350, strength: 3, worth: 10 },
 			moose: 		{ spawn: .55, health: 75, speed: 250, strength: 10, worth: 25 },
 			zombie: 	{ spawn: .75, health: 100, speed: 200, strength: 10, worth: 50 },
 			vomit: 		{ spawn: .88, health: 150, speed: 175, strength: 10, worth: 75 },

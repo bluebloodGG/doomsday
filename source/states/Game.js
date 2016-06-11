@@ -44,7 +44,7 @@ Doomsday.Main.prototype.create = function() {
 	this.player = new Doomsday.Player(this.game, this.layerPlayer);
 	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso, this.layerMonsters, this.spawners);
 
-	this.monsterManager.generateMonsters(50);
+	this.monsterManager.generateMonsters(25);
 	this.hud = new Doomsday.Hud(this.game, this.player);
 
 	this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -72,7 +72,7 @@ Doomsday.Main.prototype.update = function() {
 
 	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.monsterManager.monsters, this.hit, null, this);
 	this.game.physics.arcade.collide(this.player.torso, this.dungeon);
-	this.game.physics.arcade.overlap(this.player.torso, this.monsterManager.monsters, this.hit, null, this);
+	this.game.physics.arcade.overlap(this.player.torso, this.monsterManager.monsters, this.monsterHitPlayer, null, this);
 	this.game.physics.arcade.overlap(this.player.torso, this.lava, this.walkingOnLava, null, this);
 	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.dungeon, this.hitWall, null, this);
 
@@ -93,6 +93,9 @@ Doomsday.Main.prototype.render = function() {
 	this.game.debug.text('R: Reload', left, top + 80);
 };
 
+Doomsday.Main.prototype.monsterHitPlayer = function(player, monster) {
+	player.parent.damage(monster.strength);
+}
 Doomsday.Main.prototype.hit = function(attacker, target) {
 	//this.game.plugins.screenShake.start(20);
 
@@ -102,12 +105,12 @@ Doomsday.Main.prototype.hit = function(attacker, target) {
 		this.game.score += target.worth;
 	}
 
-	if(attacker.key === "bullet") {
-		attacker.kill();
-	}
-
 	if(attacker.parent.name === "Player") {
 		attacker.parent.damage(1);
+	}
+
+	if(attacker.key === "bullet") {
+		attacker.kill();
 	}
 };
 
