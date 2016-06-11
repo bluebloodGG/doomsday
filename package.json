@@ -1,25 +1,28 @@
 {
-  "name": "doomsday",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Top down 2D shooter",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "blueblood",
-  "license": "WTFPL",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bluebloodGG/doomsday.git"
-  },
-  "dependencies": {
-    "node-static": "^0.7.7",
-    "phaser": "^2.4.8"
-  },
-  "devDependencies": {
-    "browserify": "^13.0.1",
-    "browserify-shim": "^3.8.12",
-    "typescript": "^1.8.10"
-  }
+	"name": "doomsday",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Top down 2D shooter",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "blueblood",
+	"license": "WTFPL",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bluebloodGG/doomsday.git"
+	},
+	"dependencies": {
+		"body-parser": "^1.15.1",
+		"express": "^4.13.4",
+		"firebase": "^3.0.4",
+		"node-static": "^0.7.7",
+		"phaser": "^2.4.8"
+	},
+	"devDependencies": {
+		"browserify": "^13.0.1",
+		"browserify-shim": "^3.8.12",
+		"typescript": "^1.8.10"
+	}
 }

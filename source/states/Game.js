@@ -7,16 +7,13 @@ Doomsday.Main = function(game) {
     this.map = null;
 	this.layer = null;
 	this.player = null;
-	this.monsterManager = null;
 };
 
 Doomsday.Main.prototype.preload = function() {
 	console.log('Main.preload');
-
 };
 
 Doomsday.Main.prototype.create = function() {
-
 	// The 'mario' key here is the Loader key given in game.load.tilemap
 	this.map = this.game.add.tilemap('level1');
 
@@ -42,9 +39,10 @@ Doomsday.Main.prototype.create = function() {
 	this.layerPlayer = this.game.add.group();
 
 	this.player = new Doomsday.Player(this.game, this.layerPlayer);
-	this.monsterManager = new Doomsday.MonsterManager(this.game, this.player.torso, this.layerMonsters, this.spawners);
+	this.player.onDeath.add(this.handlePlayerDeath, this);
+	this.waveManager = new Doomsday.WaveManager(this.game, this.player, this.layerMonsters, this.spawners);
+	this.waveManager.start();
 
-	this.monsterManager.generateMonsters(25);
 	this.hud = new Doomsday.Hud(this.game, this.player);
 
 	this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -58,31 +56,35 @@ Doomsday.Main.prototype.create = function() {
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TWO);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.THREE);
 
+
 	this.game.score = 0;
 	this.game.startTime = 0;
 	this.game.elapsedTime = 0;
 	this.game.startTime = this.game.time.time;
+	this.game.lastTookDamage = 0;
 };
 
 Doomsday.Main.prototype.update = function() {
+	if(this.player.alive) {
+		var ms = (this.game.time.time - this.game.startTime)
+		var sec = Math.round(ms/1000);
+		this.game.elapsedTime = this.formatTime(sec);
+	}
+
 	this.handleInput();
 	this.player.update();
-	this.monsterManager.update();
+	this.waveManager.update();
 	this.hud.update();
 
-	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.monsterManager.monsters, this.hit, null, this);
+	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.waveManager.getCurrentWaveMonsters(), this.hit, null, this);
 	this.game.physics.arcade.collide(this.player.torso, this.dungeon);
-	this.game.physics.arcade.overlap(this.player.torso, this.monsterManager.monsters, this.monsterHitPlayer, null, this);
+	this.game.physics.arcade.overlap(this.player.torso, this.waveManager.getCurrentWaveMonsters(), this.monsterHitPlayer, null, this);
 	this.game.physics.arcade.overlap(this.player.torso, this.lava, this.walkingOnLava, null, this);
 	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.dungeon, this.hitWall, null, this);
-
-	var ms = (this.game.time.time - this.game.startTime)
-	var sec = Math.round(ms/1000);
-	this.game.elapsedTime = this.formatTime(sec);
 };
 
 Doomsday.Main.prototype.render = function() {
-	this.monsterManager.render();
+	this.waveManager.render();
 	var left = 16;
 	var top = 64;
 	this.game.debug.text("FPS: " + this.game.time.fps, left, top);
@@ -94,7 +96,11 @@ Doomsday.Main.prototype.render = function() {
 };
 
 Doomsday.Main.prototype.monsterHitPlayer = function(player, monster) {
+	if(this.game.time.time < this.game.lastTookDamage) return;
+
 	player.parent.damage(monster.strength);
+	this.game.lastTookDamage = this.game.time.time + 500;
+	this.game.plugins.screenShake.start(20);
 }
 Doomsday.Main.prototype.hit = function(attacker, target) {
 	//this.game.plugins.screenShake.start(20);
@@ -139,4 +145,22 @@ Doomsday.Main.prototype.formatTime = function(s) {
 	var minutes = "0" + Math.floor(s / 60);
 	var seconds = "0" + (s - minutes * 60);
 	return minutes.substr(-2) + ":" + seconds.substr(-2);
+};
+
+Doomsday.Main.prototype.handlePlayerDeath = function() {
+	var data = {
+		name: this.game.playerName,
+		time: Date.now(),
+		score: this.game.score,
+		elapsedTime: this.game.elapsedTime
+	};
+
+	this.game.saveHighscore(data);
+
+	//this.game.save('doomsday');
+	//console.table(this.game.highscores);
+	this.game.camera.fade("#000", 1000)
+		this.game.camera.onFadeComplete.addOnce(function() {
+			this.game.state.start('GameOver');
+		}, this);
 };

@@ -11,11 +11,11 @@ Doomsday.MonsterManager = (function () {
 		this.gameOver = false;
 
 		this.stats = {
-			crow: 		{ spawn: .30, health: 50, speed: 350, strength: 3, worth: 10 },
-			moose: 		{ spawn: .55, health: 75, speed: 250, strength: 10, worth: 25 },
-			zombie: 	{ spawn: .75, health: 100, speed: 200, strength: 10, worth: 50 },
-			vomit: 		{ spawn: .88, health: 150, speed: 175, strength: 10, worth: 75 },
-			rott: 		{ spawn: .95, health: 100, speed: 150, strength: 10, worth: 100 },
+			crow: 		{ spawn: .30, health: 50, speed: 350, strength: 1, worth: 10 },
+			moose: 		{ spawn: .55, health: 75, speed: 250, strength: 2, worth: 25 },
+			zombie: 	{ spawn: .75, health: 100, speed: 200, strength: 3, worth: 50 },
+			vomit: 		{ spawn: .88, health: 150, speed: 175, strength: 4, worth: 75 },
+			rott: 		{ spawn: .95, health: 100, speed: 150, strength: 5, worth: 100 },
 			fatso: 		{ spawn: 1, health: 250, speed: 100, strength: 10, worth: 200 }
 		}
 	}

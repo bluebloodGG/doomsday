@@ -48,7 +48,6 @@ Doomsday.Preloader.prototype = {
 
 		var screenShake = this.game.plugins.add(Phaser.Plugin.ScreenShake);
 		this.game.plugins.screenShake = screenShake;
-
     },
 
     create: function() {

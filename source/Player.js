@@ -44,6 +44,8 @@ Doomsday.Player = (function () {
 			this.weapons[i].visible = false;
 		}
 
+		this.onDeath = new Phaser.Signal();
+
 	};
 
 	Player.prototype = Object.create(Phaser.Group.prototype);
@@ -151,11 +153,7 @@ Doomsday.Player = (function () {
 		this.corpse.x = this.torso.x
 		this.corpse.y = this.torso.y
 		this.corpse.animations.play('splat', 14, false);
-		this.game.camera.fade("#000", 1000)
-		this.game.camera.onFadeComplete.addOnce(function() {
-			this.game.state.start('GameOver');
-		}, this);
-
+		this.onDeath.dispatch(this);
 	}
 
 	return Player;

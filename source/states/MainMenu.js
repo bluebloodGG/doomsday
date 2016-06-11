@@ -25,10 +25,15 @@ Doomsday.Menu.prototype = {
         this.camera.reset();
         //this.game.state.start('Game');
         //this.game.state.start('GameOver');
+        this.game.playerName = "jesper";
     },
 
     update: function() {
         this.spaceToPlay.text = "PRESS SPACE TO PLAY"
+
+        if(!this.game.playerName)
+            this.game.playerName = prompt('Namn');
+
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
             this.game.state.start('Game');
         }
