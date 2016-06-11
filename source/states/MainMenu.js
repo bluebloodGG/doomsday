@@ -25,7 +25,7 @@ Doomsday.Menu.prototype = {
         this.camera.reset();
         //this.game.state.start('Game');
         //this.game.state.start('GameOver');
-        this.game.playerName = "jesper";
+
     },
 
     update: function() {

@@ -1,14 +1,5 @@
 (function () {
 
-	firebase.initializeApp(Doomsday.config.firebase);
-
-	firebase.auth().signInAnonymously().catch(function (error) {
-		// Handle Errors here.
-		var errorCode = error.code;
-		var errorMessage = error.message;
-		debugger;
-	});
-
 	Phaser.Game.prototype.saveHighscore = function (data) {
 		$.ajax({
 			type: "POST",
@@ -29,16 +20,6 @@
 			}
 		});
 
-		var that = this;
-		firebase.database().ref('highscores/').once('value').then(function (snapshot) {
-
-			that.highscores = snapshot.val();
-		});
-		// if (key === undefined) key = 'default';
-		// var state = localStorage.getItem('save-' + key);
-		// if (state) {
-		// 	this.unserialize(state);
-		// }
 	};
 
 	Phaser.Game.prototype.serialize = function () {

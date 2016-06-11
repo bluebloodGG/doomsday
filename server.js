@@ -10,7 +10,7 @@ firebase.initializeApp({
   databaseURL: process.env.FB_DATABASEURL,
   serviceAccount: {
     "project_id": process.env.FB_PROJECTID,
-    "private_key": process.env.FB_PRIVATEKEY,
+    "private_key": process.env.FB_PRIVATEKEY.replace(/\\n/g, '\n'),
     "client_email": process.env.FB_CLIENTEMAIL
   }
 });
