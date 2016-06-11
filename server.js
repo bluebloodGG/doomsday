@@ -19,6 +19,11 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
+app.get("/ping", function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({"result": "pong"}));
+});
+
 app.get("/highscores", function (req, res) {
   firebase.database().ref('highscores').orderByChild('score').limitToLast(10).once('value').then(function (snapshot) {
     var result = [];
