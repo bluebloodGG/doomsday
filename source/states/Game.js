@@ -50,7 +50,7 @@ Doomsday.Main.prototype.create = function() {
 	this.key3 = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
 	this.key1.onDown.add(this.onSelectWeapon, this, 0, 0);
 	this.key2.onDown.add(this.onSelectWeapon, this, 0, 1);
-	this.key3.onDown.add(this.onSelectWeapon, this, 0, 2);
+	this.key3.onDown.add(this.waveManager.nextWave, this.waveManager, 0, 2);
 
 	this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ONE);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TWO);
@@ -60,11 +60,15 @@ Doomsday.Main.prototype.create = function() {
 	this.game.score = 0;
 	this.game.startTime = 0;
 	this.game.elapsedTime = 0;
-	this.game.startTime = this.game.time.time;
 	this.game.lastTookDamage = 0;
 };
 
 Doomsday.Main.prototype.update = function() {
+	if(!this.waveManager.waveInProgress) {
+		this.game.startTime = this.game.time.time;
+		return;
+	}
+
 	if(this.player.alive) {
 		var ms = (this.game.time.time - this.game.startTime)
 		var sec = Math.round(ms/1000);
@@ -109,6 +113,7 @@ Doomsday.Main.prototype.hit = function(attacker, target) {
 	if(target.health <= 0) {
 		target.health = 0;
 		this.game.score += target.worth;
+		this.waveManager.monsterManager.handleDeath(target);
 	}
 
 	if(attacker.parent.name === "Player") {
@@ -133,6 +138,42 @@ Doomsday.Main.prototype.handleInput = function() {
 	if (this.game.input.activePointer.leftButton.isDown) {
 		this.player.fire();
 	}
+
+	if(!this.player.alive) return;
+
+		var moving = false;
+		this.player.torso.rotation = this.game.physics.arcade.angleToPointer(this.player.torso) + (Math.PI / 2);
+		this.player.legs.rotation = this.player.torso.rotation;
+
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
+			this.player.torso.body.velocity.y = -this.player.speed;
+			this.player.legs.rotation = Phaser.Math.degToRad(180);
+			moving = true;
+		} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+			this.player.torso.body.velocity.y = this.player.speed;
+			this.player.legs.rotation = Phaser.Math.degToRad(0);
+			moving = true;
+		} else {
+			this.player.torso.body.velocity.y = 0;
+		}
+
+		if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
+			this.player.torso.body.velocity.x = -this.player.speed;
+			this.player.legs.rotation = Phaser.Math.degToRad(270);
+			moving = true;
+		} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
+			this.player.torso.body.velocity.x = this.player.speed;
+			this.player.legs.rotation = Phaser.Math.degToRad(90);
+			moving = true;
+		} else {
+			this.player.torso.body.velocity.x = 0;
+		}
+
+		if (moving) {
+			this.player.legs.animations.play('walk', 4, true);
+		} else {
+			this.player.legs.animations.stop('walk');
+		}
 };
 
 Doomsday.Main.prototype.onSelectWeapon = function(e, weaponIndex) {

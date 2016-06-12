@@ -11,17 +11,27 @@ Doomsday.MonsterManager = (function () {
 		this.gameOver = false;
 
 		this.stats = {
-			crow: 		{ spawn: .30, health: 50, speed: 350, strength: 1, worth: 10 },
-			moose: 		{ spawn: .55, health: 75, speed: 250, strength: 2, worth: 25 },
-			zombie: 	{ spawn: .75, health: 100, speed: 200, strength: 3, worth: 50 },
-			vomit: 		{ spawn: .88, health: 150, speed: 175, strength: 4, worth: 75 },
-			rott: 		{ spawn: .95, health: 100, speed: 150, strength: 5, worth: 100 },
-			fatso: 		{ spawn: 1, health: 250, speed: 100, strength: 10, worth: 200 }
+			crow: { spawn: .30, health: 50, speed: 350, strength: 1, worth: 10 },
+			moose: { spawn: .55, health: 75, speed: 250, strength: 2, worth: 25 },
+			zombie: { spawn: .75, health: 100, speed: 200, strength: 3, worth: 50 },
+			vomit: { spawn: .88, health: 150, speed: 175, strength: 4, worth: 75 },
+			rott: { spawn: .95, health: 100, speed: 150, strength: 5, worth: 100 },
+			fatso: { spawn: 1, health: 250, speed: 100, strength: 10, worth: 200 }
 		}
 	}
 
+	MonsterManager.prototype.destroyThemAll = function () {
+
+		var i = 0;
+		this.monsters.forEachAlive(function (monster) {
+			this.handleDeath(monster);
+			i++;
+		}, this);
+		console.log("killed", i);
+	};
+
 	MonsterManager.prototype.update = function () {
-		if(this.gameOver) return;
+		if (this.gameOver) return;
 
 		this.monsters.forEachAlive(function (monster) {
 			if (/*monster.visible && monster.inCamera && */!monster.spawning) {
@@ -32,16 +42,13 @@ Doomsday.MonsterManager = (function () {
 			}
 		}, this);
 
-		this.monsters.forEachDead(function (monster) {
-			this.handleDeath(monster);
-			this.generateMonster();
-		}, this);
+		//  this.monsters.forEachDead(function (monster) {
+		//  	this.handleDeath(monster);
+		//  	//this.generateMonster();
+		//  }, this);
 
-		if(!this.player.alive) {
-			this.monsters.callAll('kill');
-			this.monsters.forEachDead(function (monster) {
-				this.handleDeath(monster);
-			}, this);
+		if (!this.player.alive) {
+			this.destroyThemAll();
 
 			this.gameOver = true;
 		}
@@ -70,6 +77,9 @@ Doomsday.MonsterManager = (function () {
 		monster.spawning = true;
 		monster.corpseFrames = corpseFrames;
 		monster.worth = stats.worth;
+		monster.texture.baseTexture.scaleMode = PIXI.scaleModes.NEAREST;
+		var scale = Math.max(monster.maxHealth / 100, 1.5);
+		monster.scale.set(scale);
 		//monster.healthbar = new Doomsday.Healthbar(this.game, monster);
 
 		return monster;
@@ -85,7 +95,10 @@ Doomsday.MonsterManager = (function () {
 	};
 
 	MonsterManager.prototype.generateMonster = function () {
-		var monster = this.monsters.create(this.game.world.randomX, this.game.world.randomY, 'zombiearmy');
+		var monster = this.monsters.getFirstDead();
+		if(monster == null)
+			monster = this.monsters.create(this.game.world.randomX, this.game.world.randomY, 'zombiearmy');
+
 		monster.anchor.setTo(0.5, 0.5);
 
 		var idx = this.game.rnd.between(0, this.spawners.length - 1);
@@ -123,7 +136,6 @@ Doomsday.MonsterManager = (function () {
 		monster.animations.add('attack', Phaser.Animation.generateFrameNames('fatso/attack/fatso_attack_000', 1, 2, '.png'), 2);
 		monster.animations.add('spawn', Phaser.Animation.generateFrameNames('fatso/spawn/fatso_spawn_000', 1, 2, '.png'), 2);
 
-		monster.scale.setTo(2.0, 2.0);
 		return this.setStats(monster, 'fatso', this.stats.fatso, Phaser.Animation.generateFrameNames('fatso/guts/fatso_guts_000', 1, 3, '.png'));
 	};
 
@@ -181,7 +193,7 @@ Doomsday.MonsterManager = (function () {
 		corpse.lifespan = 3000;
 		corpse.scale = target.scale;
 
-		target.destroy();
+		target.kill();
 		//target.healthbar.onDestroy();
 	};
 

@@ -52,7 +52,6 @@ Doomsday.Player = (function () {
 	Player.prototype.constructor = Player;
 
 	Player.prototype.update = function () {
-		this.handleInput();
 
 		this.legs.x = this.torso.x;
 		this.legs.y = this.torso.y;
@@ -68,53 +67,6 @@ Doomsday.Player = (function () {
 	Player.prototype.fire = function() {
 		if(!this.alive) return;
 		this.weapons[this.currentWeapon].fire(this.torso, this.torso.angle);
-	};
-
-	Player.prototype.handleInput = function () {
-		if(!this.alive) return;
-
-		var moving = false;
-		this.torso.rotation = this.game.physics.arcade.angleToPointer(this.torso) + (Math.PI / 2);
-		this.legs.rotation = this.torso.rotation;
-
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
-			this.torso.body.velocity.y = -this.speed;
-			this.legs.rotation = Phaser.Math.degToRad(180);
-			moving = true;
-		} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
-			this.torso.body.velocity.y = this.speed;
-			this.legs.rotation = Phaser.Math.degToRad(0);
-			moving = true;
-		} else {
-			this.torso.body.velocity.y = 0;
-		}
-
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-			this.torso.body.velocity.x = -this.speed;
-			this.legs.rotation = Phaser.Math.degToRad(270);
-			moving = true;
-		} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
-			this.torso.body.velocity.x = this.speed;
-			this.legs.rotation = Phaser.Math.degToRad(90);
-			moving = true;
-		} else {
-			this.torso.body.velocity.x = 0;
-		}
-
-		// if (this.game.input.activePointer.isDown) {
-		// 	this.weaponManager.fire();
-		// }
-
-		if (moving) {
-			this.legs.animations.play('walk', 4, true);
-		} else {
-			this.legs.animations.stop('walk');
-		}
-
-// 		this.rKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
-// 		this.rKey.onDown.add(function() {
-// 			this.weapon.reload();
-// 		}, this);
 	};
 
 	Player.prototype.selectWeapon = function(index) {
