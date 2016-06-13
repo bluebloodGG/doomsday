@@ -23,9 +23,14 @@ Doomsday.Menu.prototype = {
         this.game.add.tween(this.spaceToPlayImage).to( { alpha: 0.1 }, 1000, "Linear", true, 0, -1, true);
 
         this.camera.reset();
-        //this.game.playerName = "jesper"
+        this.game.playerName = "jesper"
         // this.game.state.start('Game');
         // this.game.state.start('GameOver');
+
+        var style = { font: "bold 12px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+        this.version = this.game.add.text(100, 200, "0.1.0", style);
+        this.version.anchor.set(0, 0);
+        this.version.position.set(this.camera.width - this.version.width - 4, this.camera.height - this.version.height);
 
     },
 
@@ -38,9 +43,10 @@ Doomsday.Menu.prototype = {
         if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
             this.game.state.start('Game');
         }
+
+
     },
 
     render: function() {
-
     }
 };
