@@ -40,23 +40,30 @@ Doomsday.GameOver.prototype = {
         // this.timerImage.anchor.set(0.5);
 
         this.game.loadHighscores(function (highscores) {
-            if(this.game.state.current !== "GameOver") return;
+            if (this.game.state.current !== "GameOver") return;
 
             this.highscoreDisplay = [];
 
             var highscoreX = this.game.camera.width / 2;
-            var highscoreY = 200;
+            var highscoreY = 230;
             var i = 0;
+
+            var font = this.game.add.retroFont('ESPrade', 16, 16, Phaser.RetroFont.TEXT_SET1, 95, 0, 0, 0, 16);
+            var image = this.game.add.image(highscoreX, highscoreY - 48, font);
+            image.fixedToCamera = true;
+            image.anchor.setTo(0.5);
+            font.text = this.buildHighscoreString(i, highscore, true);
+
             for (var idx in highscores) {
                 var flash = false;
                 var highscore = highscores[idx];
-                var font = this.game.add.retroFont('ESPrade', 16, 16, Phaser.RetroFont.TEXT_SET1);
+                font = this.game.add.retroFont('ESPrade', 16, 16, Phaser.RetroFont.TEXT_SET1);
 
                 if (this.game.playerName === highscore.name && this.game.score === highscore.score && this.game.elapsedTime === highscore.elapsedTime) {
                     font = this.game.add.retroFont('ESPrade', 16, 16, Phaser.RetroFont.TEXT_SET1, 95, 0, 0, 0, 32);
                     flash = true;
                 }
-                var image = this.game.add.image(highscoreX, highscoreY + (i * 32), font);
+                image = this.game.add.image(highscoreX, highscoreY + (i * 32), font);
                 image.fixedToCamera = true;
                 image.anchor.setTo(0.5);
                 font.text = this.buildHighscoreString(i, highscore);
@@ -101,12 +108,19 @@ Doomsday.GameOver.prototype = {
 
     },
 
-    buildHighscoreString: function (index, highscore) {
-        var place = String("     " + (index + 1)).slice(-5);
-        if (!highscore.name) highscore.name = "";
-        var name = String("          " + highscore.name.substring(0, 10)).slice(-10)
-        var elapsedTime = highscore.elapsedTime
-        var score = String("....." + highscore.score).slice(-5);
-        return [place, name, elapsedTime, score].join(" - ");
+    buildHighscoreString: function (index, highscore, header) {
+        if (!header) {
+            var place = String("     " + (index + 1)).slice(-5);
+            if (!highscore.name) highscore.name = "";
+            var name = String("          " + highscore.name.substring(0, 10)).slice(-10)
+            var elapsedTime = highscore.elapsedTime
+            var score = String("     " + highscore.score).slice(-5);
+            var wave = String("W:   " + highscore.wave).slice(-5);
+            return [place, name, elapsedTime, score, wave].join(" I ");
+        } else {
+
+            return "  Place       Name    Time    Score    Wave"
+            //return "    1 -     JESPER - 00:07 - 31337 -    39";
+        }
     }
 };

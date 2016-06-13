@@ -1,10 +1,11 @@
 /* global Phaser Doomsday */
 Doomsday.Hud = (function() {
-	function Hud(game, player) {
+	function Hud(game, player, waveManager) {
 		Phaser.Group.call(this, game);
 
 		this.game = game;
 		this.player = player;
+		this.waveManager = waveManager;
 
 		this.infoFont = this.game.add.retroFont('ESPrade', 16, 16, Phaser.RetroFont.TEXT_SET1);
 		this.infoImage = this.game.add.image(16,this.game.camera.height-16, this.infoFont);
@@ -27,8 +28,9 @@ Doomsday.Hud = (function() {
 
 	Hud.prototype.update = function() {
 		this.timerFont.text = "Survival timer: " + this.game.elapsedTime;
-		this.infoFont.text = "Health: " + this.player.health + "/" + this.player.maxHealth +
-		" Weapon: " + this.player.weapons[this.player.currentWeapon].weapon.name;
+		this.infoFont.text = "Health: " + this.player.health + "/" + this.player.maxHealth
+		+ " Weapon: " + this.player.weapons[this.player.currentWeapon].weapon.name
+		+ " Monsters Left: " + this.waveManager.monsterManager.monstersAlive;
 		this.scoreFont.text = "Score: " + this.game.score;
 	};
 

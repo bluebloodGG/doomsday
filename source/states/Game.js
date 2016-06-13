@@ -39,11 +39,11 @@ Doomsday.Main.prototype.create = function() {
 	this.layerPlayer = this.game.add.group();
 
 	this.player = new Doomsday.Player(this.game, this.layerPlayer);
-	this.player.onDeath.add(this.handlePlayerDeath, this);
+
 	this.waveManager = new Doomsday.WaveManager(this.game, this.player, this.layerMonsters, this.spawners);
 	this.waveManager.start();
 
-	this.hud = new Doomsday.Hud(this.game, this.player);
+	this.hud = new Doomsday.Hud(this.game, this.player, this.waveManager);
 
 	this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
 	this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
@@ -61,18 +61,22 @@ Doomsday.Main.prototype.create = function() {
 	this.game.startTime = 0;
 	this.game.elapsedTime = 0;
 	this.game.lastTookDamage = 0;
+	this.game.gameTime = this.game.time.create(false);
+	this.game.gameTime.start();
+
+	this.player.onDeath.add(this.handlePlayerDeath, this);
 };
 
 Doomsday.Main.prototype.update = function() {
 	if(!this.waveManager.waveInProgress) {
-		this.game.startTime = this.game.time.time;
+		this.game.gameTime.pause()
 		return;
+	} else {
+		this.game.gameTime.resume();
 	}
 
 	if(this.player.alive) {
-		var ms = (this.game.time.time - this.game.startTime)
-		var sec = Math.round(ms/1000);
-		this.game.elapsedTime = this.formatTime(sec);
+		this.game.elapsedTime = this.formatTime(this.game.gameTime.seconds);
 	}
 
 	this.handleInput();
@@ -183,6 +187,7 @@ Doomsday.Main.prototype.onSelectWeapon = function(e, weaponIndex) {
 
 Doomsday.Main.prototype.formatTime = function(s) {
 	// Convert seconds (s) to a nicely formatted and padded time string
+	s = Math.round(s);
 	var minutes = "0" + Math.floor(s / 60);
 	var seconds = "0" + (s - minutes * 60);
 	return minutes.substr(-2) + ":" + seconds.substr(-2);
@@ -193,7 +198,8 @@ Doomsday.Main.prototype.handlePlayerDeath = function() {
 		name: this.game.playerName,
 		time: Date.now(),
 		score: this.game.score,
-		elapsedTime: this.game.elapsedTime
+		elapsedTime: this.game.elapsedTime,
+		wave: this.waveManager.currentWave
 	};
 
 	this.game.saveHighscore(data);

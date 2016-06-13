@@ -9,14 +9,15 @@ Doomsday.MonsterManager = (function () {
 		this.blood = this.game.add.group(parent, 'Blood');
 		this.monsters = this.game.add.group(parent, 'Monsters');
 		this.gameOver = false;
+		this.monstersAlive = 0;
 
 		this.stats = {
-			crow: { spawn: .30, health: 50, speed: 350, strength: 1, worth: 10 },
-			moose: { spawn: .55, health: 75, speed: 250, strength: 2, worth: 25 },
-			zombie: { spawn: .75, health: 100, speed: 200, strength: 3, worth: 50 },
-			vomit: { spawn: .88, health: 150, speed: 175, strength: 4, worth: 75 },
-			rott: { spawn: .95, health: 100, speed: 150, strength: 5, worth: 100 },
-			fatso: { spawn: 1, health: 250, speed: 100, strength: 10, worth: 200 }
+			crow: { spawn: .30, health: 50, speed: 400, strength: 2, worth: 10 },
+			moose: { spawn: .55, health: 75, speed: 250, strength: 4, worth: 25 },
+			zombie: { spawn: .75, health: 100, speed: 200, strength: 6, worth: 50 },
+			vomit: { spawn: .88, health: 150, speed: 175, strength: 8, worth: 75 },
+			rott: { spawn: .95, health: 100, speed: 250, strength: 10, worth: 100 },
+			fatso: { spawn: 1, health: 250, speed: 150, strength: 20, worth: 200 }
 		}
 	}
 
@@ -31,6 +32,7 @@ Doomsday.MonsterManager = (function () {
 	};
 
 	MonsterManager.prototype.update = function () {
+		this.monstersAlive = 0;
 		if (this.gameOver) return;
 
 		this.monsters.forEachAlive(function (monster) {
@@ -40,6 +42,7 @@ Doomsday.MonsterManager = (function () {
 				monster.animations.play('move');
 				//monster.healthbar.update();
 			}
+			this.monstersAlive++;
 		}, this);
 
 		//  this.monsters.forEachDead(function (monster) {
@@ -55,12 +58,12 @@ Doomsday.MonsterManager = (function () {
 	};
 
 	MonsterManager.prototype.render = function () {
-		this.monsters.forEach(function(monster) {
-			this.game.debug.body(monster);
-		}, this);
-		this.monsters.forEachAlive(function (monster) {
-			//monster.healthbar.render();
-		}, this);
+		// this.monsters.forEach(function(monster) {
+		// 	this.game.debug.body(monster);
+		// }, this);
+		// this.monsters.forEachAlive(function (monster) {
+		// 	//monster.healthbar.render();
+		// }, this);
 	}
 
 	MonsterManager.prototype.setStats = function (monster, name, stats, corpseFrames) {
@@ -92,7 +95,7 @@ Doomsday.MonsterManager = (function () {
 		this.monsters.enableBody = true;
 		this.monsters.physicsBodyType = Phaser.Physics.ARCADE;
 
-		amount  = (amount + wave) * Math.pow(wave, 1/6);
+		amount  = (amount + wave) * Math.pow(wave, 1/4);
 
 		for (var i = 0; i < amount; i++) {
 			this.generateMonster();
