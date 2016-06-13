@@ -55,6 +55,9 @@ Doomsday.MonsterManager = (function () {
 	};
 
 	MonsterManager.prototype.render = function () {
+		this.monsters.forEach(function(monster) {
+			this.game.debug.body(monster);
+		}, this);
 		this.monsters.forEachAlive(function (monster) {
 			//monster.healthbar.render();
 		}, this);
@@ -85,9 +88,11 @@ Doomsday.MonsterManager = (function () {
 		return monster;
 	};
 
-	MonsterManager.prototype.generateMonsters = function (amount) {
+	MonsterManager.prototype.generateMonsters = function (amount, wave) {
 		this.monsters.enableBody = true;
 		this.monsters.physicsBodyType = Phaser.Physics.ARCADE;
+
+		amount  = (amount + wave) * Math.pow(wave, 1/6);
 
 		for (var i = 0; i < amount; i++) {
 			this.generateMonster();

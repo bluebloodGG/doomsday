@@ -45,7 +45,7 @@ Doomsday.WaveManager = (function() {
 			this.game.time.events.add(Phaser.Timer.HALF, function() {
 				this.waveInProgress = true;
 				this.waveText.visible = false;
-				this.monsterManager.generateMonsters(10);
+				this.monsterManager.generateMonsters(10, 10);
 			}, this);
 
 		}
