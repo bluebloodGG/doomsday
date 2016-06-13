@@ -40,6 +40,7 @@ Doomsday.GameOver.prototype = {
         // this.timerImage.anchor.set(0.5);
 
         this.game.loadHighscores(function (highscores) {
+            if(this.game.state.current !== "GameOver") return;
 
             this.highscoreDisplay = [];
 
