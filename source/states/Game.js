@@ -1,7 +1,7 @@
 /* global Doomsday: true, Phaser: true */
 'use strict';
 
-Doomsday.Main = function(game) {
+Doomsday.Main = function (game) {
     this.game = game;
 
     this.map = null;
@@ -9,11 +9,11 @@ Doomsday.Main = function(game) {
 	this.player = null;
 };
 
-Doomsday.Main.prototype.preload = function() {
+Doomsday.Main.prototype.preload = function () {
 	console.log('Main.preload');
 };
 
-Doomsday.Main.prototype.create = function() {
+Doomsday.Main.prototype.create = function () {
 	// The 'mario' key here is the Loader key given in game.load.tilemap
 	this.map = this.game.add.tilemap('level1');
 
@@ -67,31 +67,36 @@ Doomsday.Main.prototype.create = function() {
 	this.player.onDeath.add(this.handlePlayerDeath, this);
 };
 
-Doomsday.Main.prototype.update = function() {
-	if(!this.waveManager.waveInProgress) {
+Doomsday.Main.prototype.update = function () {
+	if (!this.waveManager.waveInProgress) {
 		this.game.gameTime.pause()
 		return;
 	} else {
 		this.game.gameTime.resume();
 	}
 
-	if(this.player.alive) {
+	if (this.player.alive) {
 		this.game.elapsedTime = this.formatTime(this.game.gameTime.seconds);
 	}
 
 	this.handleInput();
 	this.player.update();
+
+this.game.physics.arcade.collide(this.waveManager.getCurrentWaveMonsters(), this.dungeon, this.monsterCollide, null, this);
+
 	this.waveManager.update();
 	this.hud.update();
 
+
 	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.waveManager.getCurrentWaveMonsters(), this.hit, null, this);
 	this.game.physics.arcade.collide(this.player.torso, this.dungeon);
+
 	this.game.physics.arcade.overlap(this.player.torso, this.waveManager.getCurrentWaveMonsters(), this.monsterHitPlayer, null, this);
 	this.game.physics.arcade.overlap(this.player.torso, this.lava, this.walkingOnLava, null, this);
 	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.dungeon, this.hitWall, null, this);
 };
 
-Doomsday.Main.prototype.render = function() {
+Doomsday.Main.prototype.render = function () {
 	this.waveManager.render();
 	var left = 16;
 	var top = 64;
@@ -103,89 +108,89 @@ Doomsday.Main.prototype.render = function() {
 	this.game.debug.text('R: Reload', left, top + 80);
 };
 
-Doomsday.Main.prototype.monsterHitPlayer = function(player, monster) {
-	if(this.game.time.time < this.game.lastTookDamage) return;
+Doomsday.Main.prototype.monsterHitPlayer = function (player, monster) {
+	if (this.game.time.time < this.game.lastTookDamage) return;
 
 	player.parent.damage(monster.strength);
 	this.game.lastTookDamage = this.game.time.time + 500;
 	this.game.plugins.screenShake.start(20);
 }
-Doomsday.Main.prototype.hit = function(attacker, target) {
+Doomsday.Main.prototype.hit = function (attacker, target) {
 	//this.game.plugins.screenShake.start(20);
 
 	target.damage(attacker.damage);
-	if(target.health <= 0) {
+	if (target.health <= 0) {
 		target.health = 0;
 		this.game.score += target.worth;
 		this.waveManager.monsterManager.handleDeath(target);
 	}
 
-	if(attacker.parent.name === "Player") {
+	if (attacker.parent.name === "Player") {
 		attacker.parent.damage(1);
 	}
 
-	if(attacker.key === "bullet") {
+	if (attacker.key === "bullet") {
 		attacker.kill();
 	}
 };
 
-Doomsday.Main.prototype.hitWall = function(attacker, target) {
+Doomsday.Main.prototype.hitWall = function (attacker, target) {
 	attacker.kill();
 };
 
-Doomsday.Main.prototype.walkingOnLava = function(player, lavaTile) {
-	if(lavaTile.collides)
+Doomsday.Main.prototype.walkingOnLava = function (player, lavaTile) {
+	if (lavaTile.collides)
 		this.player.damage(1);
 };
 
-Doomsday.Main.prototype.handleInput = function() {
+Doomsday.Main.prototype.handleInput = function () {
 	if (this.game.input.activePointer.leftButton.isDown) {
 		this.player.fire();
 	}
 
-	if(!this.player.alive) return;
+	if (!this.player.alive) return;
 
-		var moving = false;
-		this.player.torso.rotation = this.game.physics.arcade.angleToPointer(this.player.torso) + (Math.PI / 2);
-		this.player.legs.rotation = this.player.torso.rotation;
+	var moving = false;
+	this.player.torso.rotation = this.game.physics.arcade.angleToPointer(this.player.torso) + (Math.PI / 2);
+	this.player.legs.rotation = this.player.torso.rotation;
 
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
-			this.player.torso.body.velocity.y = -this.player.speed;
-			this.player.legs.rotation = Phaser.Math.degToRad(180);
-			moving = true;
-		} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
-			this.player.torso.body.velocity.y = this.player.speed;
-			this.player.legs.rotation = Phaser.Math.degToRad(0);
-			moving = true;
-		} else {
-			this.player.torso.body.velocity.y = 0;
-		}
+	if (this.game.input.keyboard.isDown(Phaser.Keyboard.W)) {
+		this.player.torso.body.velocity.y = -this.player.speed;
+		this.player.legs.rotation = Phaser.Math.degToRad(180);
+		moving = true;
+	} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+		this.player.torso.body.velocity.y = this.player.speed;
+		this.player.legs.rotation = Phaser.Math.degToRad(0);
+		moving = true;
+	} else {
+		this.player.torso.body.velocity.y = 0;
+	}
 
-		if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-			this.player.torso.body.velocity.x = -this.player.speed;
-			this.player.legs.rotation = Phaser.Math.degToRad(270);
-			moving = true;
-		} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
-			this.player.torso.body.velocity.x = this.player.speed;
-			this.player.legs.rotation = Phaser.Math.degToRad(90);
-			moving = true;
-		} else {
-			this.player.torso.body.velocity.x = 0;
-		}
+	if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
+		this.player.torso.body.velocity.x = -this.player.speed;
+		this.player.legs.rotation = Phaser.Math.degToRad(270);
+		moving = true;
+	} else if (this.game.input.keyboard.isDown(Phaser.Keyboard.D)) {
+		this.player.torso.body.velocity.x = this.player.speed;
+		this.player.legs.rotation = Phaser.Math.degToRad(90);
+		moving = true;
+	} else {
+		this.player.torso.body.velocity.x = 0;
+	}
 
-		if (moving) {
-			this.player.legs.animations.play('walk', 4, true);
-		} else {
-			this.player.legs.animations.stop('walk');
-		}
+	if (moving) {
+		this.player.legs.animations.play('walk', 4, true);
+	} else {
+		this.player.legs.animations.stop('walk');
+	}
 };
 
-Doomsday.Main.prototype.onSelectWeapon = function(e, weaponIndex) {
+Doomsday.Main.prototype.onSelectWeapon = function (e, weaponIndex) {
 	this.player.selectWeapon(weaponIndex);
 };
 
 
-Doomsday.Main.prototype.formatTime = function(s) {
+Doomsday.Main.prototype.formatTime = function (s) {
 	// Convert seconds (s) to a nicely formatted and padded time string
 	s = Math.round(s);
 	var minutes = "0" + Math.floor(s / 60);
@@ -193,7 +198,7 @@ Doomsday.Main.prototype.formatTime = function(s) {
 	return minutes.substr(-2) + ":" + seconds.substr(-2);
 };
 
-Doomsday.Main.prototype.handlePlayerDeath = function() {
+Doomsday.Main.prototype.handlePlayerDeath = function () {
 	var data = {
 		name: this.game.playerName,
 		time: Date.now(),
@@ -207,7 +212,31 @@ Doomsday.Main.prototype.handlePlayerDeath = function() {
 	//this.game.save('doomsday');
 	//console.table(this.game.highscores);
 	this.game.camera.fade("#000", 1000)
-		this.game.camera.onFadeComplete.addOnce(function() {
-			this.game.state.start('GameOver');
-		}, this);
+	this.game.camera.onFadeComplete.addOnce(function () {
+		this.game.state.start('GameOver');
+	}, this);
+};
+
+Doomsday.Main.prototype.monsterCollide = function (monster, tile) {
+	if (monster.body.blocked.up) {
+		monster.body.velocity.x = monster.speed;
+		monster.body.velocity.y = 0;
+	}
+
+	if (monster.body.blocked.down) {
+		monster.body.velocity.x = monster.speed;
+		monster.body.velocity.y = 0;
+	}
+
+	if (monster.body.blocked.left) {
+		monster.body.velocity.x = 0;
+		monster.body.velocity.y = monster.speed;
+	}
+
+	if (monster.body.blocked.right) {
+		monster.body.velocity.x = 0;
+		monster.body.velocity.y = monster.speed;
+	}
+
+	monster.blocked = true;
 };

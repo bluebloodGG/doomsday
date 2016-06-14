@@ -37,8 +37,15 @@ Doomsday.MonsterManager = (function () {
 
 		this.monsters.forEachAlive(function (monster) {
 			if (/*monster.visible && monster.inCamera && */!monster.spawning) {
-				var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
-				monster.rotation = rotation - (Math.PI / 2);
+
+				monster.body.velocity
+
+				var p = new Phaser.Point(this.player.x - monster.x, this.player.y - monster.y);
+				p = p.normalize().multiply(monster.speed, monster.speed);
+				monster.body.velocity.x = p.x;
+				monster.body.velocity.y = p.y;
+				//var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
+				//monster.rotation = rotation - (Math.PI / 2);
 				monster.animations.play('move');
 				//monster.healthbar.update();
 			}
@@ -95,7 +102,7 @@ Doomsday.MonsterManager = (function () {
 		this.monsters.enableBody = true;
 		this.monsters.physicsBodyType = Phaser.Physics.ARCADE;
 
-		amount  = (amount + wave) * Math.pow(wave, 1/4);
+		amount  = (amount /*+ wave*/) * Math.pow(wave, 1/4);
 
 		for (var i = 0; i < amount; i++) {
 			this.generateMonster();

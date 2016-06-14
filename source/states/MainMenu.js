@@ -23,8 +23,8 @@ Doomsday.Menu.prototype = {
         this.game.add.tween(this.spaceToPlayImage).to( { alpha: 0.1 }, 1000, "Linear", true, 0, -1, true);
 
         this.camera.reset();
-        //this.game.playerName = "jesper"
-        // this.game.state.start('Game');
+        this.game.playerName = "jesper"
+         this.game.state.start('Game');
         // this.game.state.start('GameOver');
 
     },
