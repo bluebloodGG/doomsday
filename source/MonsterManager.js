@@ -38,15 +38,21 @@ Doomsday.MonsterManager = (function () {
 		this.monsters.forEachAlive(function (monster) {
 			if (/*monster.visible && monster.inCamera && */!monster.spawning) {
 
-				monster.body.velocity
-
-				var p = new Phaser.Point(this.player.x - monster.x, this.player.y - monster.y);
-				p = p.normalize().multiply(monster.speed, monster.speed);
-				monster.body.velocity.x = p.x;
-				monster.body.velocity.y = p.y;
-				//var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
-				//monster.rotation = rotation - (Math.PI / 2);
+				if((!monster.body.blocked.up && !monster.body.blocked.down && !monster.body.blocked.left && !monster.body.blocked.right)) {
+					if(!monster.blocked) {
+					var p = new Phaser.Point(this.player.x - monster.x, this.player.y - monster.y);
+					p = p.normalize().multiply(monster.speed, monster.speed);
+					monster.body.velocity.x = p.x;
+					monster.body.velocity.y = p.y;
+					//var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
+					monster.rotation = Math.atan2(p.y, p.x) - (Math.PI / 2);
+					} else {
+						monster.blocked = false;
+					}
+				}
 				monster.animations.play('move');
+				console.log(monster.body.velocity);
+
 				//monster.healthbar.update();
 			}
 			this.monstersAlive++;

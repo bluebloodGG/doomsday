@@ -82,7 +82,7 @@ Doomsday.Main.prototype.update = function () {
 	this.handleInput();
 	this.player.update();
 
-this.game.physics.arcade.collide(this.waveManager.getCurrentWaveMonsters(), this.dungeon, this.monsterCollide, null, this);
+
 
 	this.waveManager.update();
 	this.hud.update();
@@ -90,7 +90,7 @@ this.game.physics.arcade.collide(this.waveManager.getCurrentWaveMonsters(), this
 
 	this.game.physics.arcade.overlap(this.player.weapons[this.player.currentWeapon].bullets, this.waveManager.getCurrentWaveMonsters(), this.hit, null, this);
 	this.game.physics.arcade.collide(this.player.torso, this.dungeon);
-
+this.game.physics.arcade.collide(this.waveManager.getCurrentWaveMonsters(), this.dungeon, this.monsterCollide, null, this);
 	this.game.physics.arcade.overlap(this.player.torso, this.waveManager.getCurrentWaveMonsters(), this.monsterHitPlayer, null, this);
 	this.game.physics.arcade.overlap(this.player.torso, this.lava, this.walkingOnLava, null, this);
 	this.game.physics.arcade.collide(this.player.weapons[this.player.currentWeapon].bullets, this.dungeon, this.hitWall, null, this);
@@ -222,16 +222,17 @@ Doomsday.Main.prototype.monsterCollide = function (monster, tile) {
 		monster.body.velocity.x = monster.speed;
 		monster.body.velocity.y = 0;
 	}
+		if (monster.body.blocked.left) {
+		monster.body.velocity.x = 0;
+		monster.body.velocity.y = -monster.speed;
+	}
 
 	if (monster.body.blocked.down) {
-		monster.body.velocity.x = monster.speed;
+		monster.body.velocity.x = -monster.speed;
 		monster.body.velocity.y = 0;
 	}
 
-	if (monster.body.blocked.left) {
-		monster.body.velocity.x = 0;
-		monster.body.velocity.y = monster.speed;
-	}
+
 
 	if (monster.body.blocked.right) {
 		monster.body.velocity.x = 0;
