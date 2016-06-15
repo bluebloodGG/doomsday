@@ -35,8 +35,52 @@ Doomsday.MonsterManager = (function () {
 		this.monstersAlive = 0;
 		if (this.gameOver) return;
 
+		var w = this.game.camera.width * 0.8;
+		var h = this.game.camera.height * 0.8;
+		var x = this.player.x - (w / 2);
+		var y = this.player.y - (h / 2);
+		var box = new Phaser.Rectangle(x, y, w, h);
+		var quads = [];
+		quads.push(new Phaser.Point(x + (w/4), y + (h/4)));
+		quads.push(new Phaser.Point(x + w - (w/4), y + ((h/4))));
+		quads.push(new Phaser.Point(x + w - (w/4), y + h - (h/4)));
+		quads.push(new Phaser.Point(x + (w/4), y + h - (h/4)));
+		quads.push(new Phaser.Point(this.player.x, this.player.y));
+
+		if(this.game.isDebug) {
+			var c1 = new Phaser.Circle(quads[0].x, quads[0].y, 50);
+			var c2 = new Phaser.Circle(quads[1].x, quads[1].y, 50);
+			var c3 = new Phaser.Circle(quads[2].x, quads[2].y, 50);
+			var c4 = new Phaser.Circle(quads[3].x, quads[3].y, 50);
+			this.game.debug.geom(box);
+			this.game.debug.geom(c1);
+			this.game.debug.geom(c2);
+			this.game.debug.geom(c3);
+			this.game.debug.geom(c4);
+		}
+
 		this.monsters.forEachAlive(function (monster) {
 			if (/*monster.visible && monster.inCamera && */!monster.spawning) {
+
+				var dest = quads[0];
+				for(var i = 1; i < quads.length; i++) {
+
+					var dist1 = Phaser.Math.distance(monster.x, monster.y, quads[i].x, quads[i].y);
+					var dist2 = Phaser.Math.distance(monster.x, monster.y, dest.x, dest.y);
+
+					if(dist1 < dist2) dest = quads[i];
+				}
+
+				if(Phaser.Math.distance(this.player.x, this.player.y, monster.x, monster.y) < 300)
+					dest.set(this.player.x, this.player.y);
+
+				if(this.game.isDebug) {
+					var line = new Phaser.Line(monster.x, monster.y, dest.x, dest.y);;
+					this.game.debug.geom(line);
+				}
+
+
+
 
 				// if((!monster.body.blocked.up && !monster.body.blocked.down && !monster.body.blocked.left && !monster.body.blocked.right)) {
 				// 	if(!monster.blocked) {
@@ -44,13 +88,17 @@ Doomsday.MonsterManager = (function () {
 				// 	p = p.normalize().multiply(monster.speed, monster.speed);
 				// 	monster.body.velocity.x = p.x;
 				// 	monster.body.velocity.y = p.y;
-				var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
+
+				var rotation = this.game.physics.arcade.moveToObject(monster, dest, monster.speed);
+
 				//monster.rotation = Math.atan2(p.y, p.x) - (Math.PI / 2);
 				// 	} else {
 				// 		monster.blocked = false;
 				// 	}
 				// }
+
 				monster.animations.play('move');
+
 				//console.log(monster.body.velocity);
 
 				//monster.healthbar.update();
@@ -71,12 +119,13 @@ Doomsday.MonsterManager = (function () {
 	};
 
 	MonsterManager.prototype.render = function () {
-		// this.monsters.forEach(function(monster) {
-		// 	this.game.debug.body(monster);
-		// }, this);
+
+
 		// this.monsters.forEachAlive(function (monster) {
 		// 	//monster.healthbar.render();
 		// }, this);
+
+
 	}
 
 	MonsterManager.prototype.setStats = function (monster, name, stats, corpseFrames) {
@@ -112,10 +161,10 @@ Doomsday.MonsterManager = (function () {
 		var amount = Math.round((start * Math.pow(wave, 6 / 8) / iter));
 
 		this.spawnMonsters(amount)
-		this.game.time.events.repeat(Phaser.Timer.SECOND * 5, iter-1,this.spawnMonsters, this, amount);
+		this.game.time.events.repeat(Phaser.Timer.SECOND * 5, iter - 1, this.spawnMonsters, this, amount);
 	};
 
-	MonsterManager.prototype.spawnMonsters = function(amount) {
+	MonsterManager.prototype.spawnMonsters = function (amount) {
 		var idx = this.game.rnd.between(0, this.spawners.length - 1);
 		var spawner = this.spawners[idx];
 		console.log("Spawning", amount * 2, "monsters from spawner", spawner.x, spawner.y);
@@ -131,12 +180,13 @@ Doomsday.MonsterManager = (function () {
 
 		monster.anchor.setTo(0.5, 0.5);
 
-		var startX = this.game.rnd.between(spawner.x, spawner.x + spawner.width);
-		var startY = this.game.rnd.between(spawner.y, spawner.y + spawner.height);
-		monster.reset(startX, startY);
-		// do {
-		// 	monster.reset(this.game.world.randomX, this.game.world.randomY);
-		// } while(Phaser.Math.distance(this.player.x, this.player.y, monster.x, monster.y) <= 200);
+		//var startX = this.game.rnd.between(spawner.x, spawner.x + spawner.width);
+		//var startY = this.game.rnd.between(spawner.y, spawner.y + spawner.height);
+		//monster.reset(startX, startY);
+		monster.reset(0, 0);
+		do {
+			monster.reset(this.game.world.randomX, this.game.world.randomY);
+		} while (Phaser.Math.distance(this.player.x, this.player.y, monster.x, monster.y) <= 400);
 
 		var rnd = Math.random();
 

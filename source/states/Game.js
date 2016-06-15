@@ -48,13 +48,16 @@ Doomsday.Main.prototype.create = function () {
 	this.key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
 	this.key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
 	this.key3 = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
+	this.key_i = this.game.input.keyboard.addKey(Phaser.Keyboard.I);
 	this.key1.onDown.add(this.onSelectWeapon, this, 0, 0);
 	this.key2.onDown.add(this.onSelectWeapon, this, 0, 1);
 	this.key3.onDown.add(this.waveManager.nextWave, this.waveManager, 0, 2);
+	this.key_i.onDown.add(this.toggleDebug, this);
 
 	this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.ONE);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.TWO);
     this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.THREE);
+    this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.I);
 
 
 	this.game.score = 0;
@@ -241,3 +244,7 @@ Doomsday.Main.prototype.monsterCollide = function (monster, tile) {
 
 	monster.blocked = true;
 };
+
+Doomsday.Main.prototype.toggleDebug = function() {
+	this.game.isDebug = !this.game.isDebug
+}
