@@ -90,7 +90,7 @@ Doomsday.MonsterManager = (function () {
 				// 	monster.body.velocity.y = p.y;
 
 				var rotation = this.game.physics.arcade.moveToObject(monster, dest, monster.speed);
-
+				monster.rotation = rotation - (Math.PI / 2);
 				//monster.rotation = Math.atan2(p.y, p.x) - (Math.PI / 2);
 				// 	} else {
 				// 		monster.blocked = false;
