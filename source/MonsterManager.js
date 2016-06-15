@@ -38,20 +38,20 @@ Doomsday.MonsterManager = (function () {
 		this.monsters.forEachAlive(function (monster) {
 			if (/*monster.visible && monster.inCamera && */!monster.spawning) {
 
-				if((!monster.body.blocked.up && !monster.body.blocked.down && !monster.body.blocked.left && !monster.body.blocked.right)) {
-					if(!monster.blocked) {
-					var p = new Phaser.Point(this.player.x - monster.x, this.player.y - monster.y);
-					p = p.normalize().multiply(monster.speed, monster.speed);
-					monster.body.velocity.x = p.x;
-					monster.body.velocity.y = p.y;
-					//var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
-					monster.rotation = Math.atan2(p.y, p.x) - (Math.PI / 2);
-					} else {
-						monster.blocked = false;
-					}
-				}
+				// if((!monster.body.blocked.up && !monster.body.blocked.down && !monster.body.blocked.left && !monster.body.blocked.right)) {
+				// 	if(!monster.blocked) {
+				// 	var p = new Phaser.Point(this.player.x - monster.x, this.player.y - monster.y);
+				// 	p = p.normalize().multiply(monster.speed, monster.speed);
+				// 	monster.body.velocity.x = p.x;
+				// 	monster.body.velocity.y = p.y;
+				var rotation = this.game.physics.arcade.moveToObject(monster, this.player, monster.speed);
+				//monster.rotation = Math.atan2(p.y, p.x) - (Math.PI / 2);
+				// 	} else {
+				// 		monster.blocked = false;
+				// 	}
+				// }
 				monster.animations.play('move');
-				console.log(monster.body.velocity);
+				//console.log(monster.body.velocity);
 
 				//monster.healthbar.update();
 			}
@@ -104,26 +104,33 @@ Doomsday.MonsterManager = (function () {
 		return monster;
 	};
 
-	MonsterManager.prototype.generateMonsters = function (amount, wave) {
+	MonsterManager.prototype.generateMonsters = function (start, wave) {
 		this.monsters.enableBody = true;
 		this.monsters.physicsBodyType = Phaser.Physics.ARCADE;
+		var iter = 4;
+		//amount  = (amount /*+ wave*/) * Math.pow(wave, 1/4);
+		var amount = Math.round((start * Math.pow(wave, 6 / 8) / iter));
 
-		amount  = (amount /*+ wave*/) * Math.pow(wave, 1/4);
-
-		for (var i = 0; i < amount; i++) {
-			this.generateMonster();
-		}
+		this.spawnMonsters(amount)
+		this.game.time.events.repeat(Phaser.Timer.SECOND * 5, iter-1,this.spawnMonsters, this, amount);
 	};
 
-	MonsterManager.prototype.generateMonster = function () {
+	MonsterManager.prototype.spawnMonsters = function(amount) {
+		var idx = this.game.rnd.between(0, this.spawners.length - 1);
+		var spawner = this.spawners[idx];
+		console.log("Spawning", amount * 2, "monsters from spawner", spawner.x, spawner.y);
+		for (var i = 0; i < amount * 2; i++) {
+			this.generateMonster(spawner);
+		}
+	}
+
+	MonsterManager.prototype.generateMonster = function (spawner) {
 		var monster = this.monsters.getFirstDead();
-		if(monster == null)
+		if (monster == null)
 			monster = this.monsters.create(this.game.world.randomX, this.game.world.randomY, 'zombiearmy');
 
 		monster.anchor.setTo(0.5, 0.5);
 
-		var idx = this.game.rnd.between(0, this.spawners.length - 1);
-		var spawner = this.spawners[idx];
 		var startX = this.game.rnd.between(spawner.x, spawner.x + spawner.width);
 		var startY = this.game.rnd.between(spawner.y, spawner.y + spawner.height);
 		monster.reset(startX, startY);
