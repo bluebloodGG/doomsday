@@ -17,4 +17,4 @@ Thanks to [flegmatik95 for wallpaper](https://pixabay.com/en/skull-hood-sword-fa
 Thanks to [Textcraft.net](http://textcraft.net/) for logos
 
 
-[Try out the pre alpha!](doomsday.herokuapp.com)
+[Try out the pre alpha!](https://doomsday.herokuapp.com)
